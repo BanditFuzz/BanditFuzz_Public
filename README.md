@@ -1,2 +1,5 @@
-# BanditFuzz_Public
-Public BanditFuzz Repo
+# BanditFuzz
+
+```
+sudo make develop
+```

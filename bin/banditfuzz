@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+import  banditfuzz.interface.Settings as settings
+from banditfuzz.interface.parseargs import parse
+#from banditfuzz.Solver import *
+from banditfuzz.fuzz import Fuzzer
+def main():
+    settings.SaveAllSolve = False
+    settings.BugMode = True
+    settings.SolverTimeout = 1000
+    settings.GeneratorMaxDepth = 3
+    settings.GeneratorNumConst = 3
+    settings.NumPrimaries = 4
+    settings.BanditTrainingMode = True
+    #settings.ConstRestrictRange_m1_p1 = True
+
+    parse()
+
+    fuzzer = Fuzzer(settings.solvers,settings.mutator)
+    fuzzer.find_bugs()
+
+if __name__ == '__main__':
+    main()

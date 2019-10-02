@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+
+import pdb
+import  banditfuzz.interface.Settings as settings
+from banditfuzz.interface.parseargs import parse
+from banditfuzz.fuzz import Fuzzer
+
+def main():
+    settings.FuzzerNumberOfGenerations = 100
+    settings.FuzzerNumberOfMutations = 2
+    settings.FuzzerNumberOfHardestKept = 1
+    settings.FuzzerNumberPopulationStart = 1
+    settings.FuzzerPopulation = 5
+    settings.SolverTimeout = 2500
+    settings.GeneratorMaxDepth = 3
+    settings.GeneratorNumConst = 6
+    settings.BugMode = False
+    settings.BanditTrainingMode = False
+    settings.NumPrimaries = 7
+    parse()
+    if settings.mutator.__name__ != 'Thompson':
+        settings.Final_Input_Prefix = 'genetic'
+        settings.NumPrimaries = 5
+    else:
+        settings.Final_Input_Prefix = 'bfuzz_' + settings.mutator.__name__
+
+    if settings.pdb:
+        pdb.set_trace()
+    fuzzer = Fuzzer(settings.solvers,settings.mutator)
+    fuzzer.fuzz()
+
+if __name__ == '__main__':
+    main()

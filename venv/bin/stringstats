@@ -1,0 +1,7 @@
+#!/mnt/c/Users/joe/Desktop/BanditFuzz_Public/venv/bin/python3
+# EASY-INSTALL-DEV-SCRIPT: 'stringfuzz==0.1','stringstats'
+__requires__ = 'stringfuzz==0.1'
+__import__('pkg_resources').require('stringfuzz==0.1')
+__file__ = '/mnt/c/Users/joe/Desktop/BanditFuzz_Public/banditfuzz/stringfuzz/bin/stringstats'
+with open(__file__) as f:
+    exec(compile(f.read(), __file__, 'exec'))

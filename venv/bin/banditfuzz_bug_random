@@ -1,0 +1,7 @@
+#!/mnt/c/Users/joe/Desktop/BanditFuzz_Public/venv/bin/python3
+# EASY-INSTALL-DEV-SCRIPT: 'banditfuzz==0.1','banditfuzz_bug_random'
+__requires__ = 'banditfuzz==0.1'
+__import__('pkg_resources').require('banditfuzz==0.1')
+__file__ = '/mnt/c/Users/joe/Desktop/BanditFuzz_Public/bin/banditfuzz_bug_random'
+with open(__file__) as f:
+    exec(compile(f.read(), __file__, 'exec'))

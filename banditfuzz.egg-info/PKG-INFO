@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: banditfuzz
+Version: 0.1
+Summary: Fuzzer for SMTLIB 2.x solvers.
+Home-page: https://github.com/j29scott/BanditFuzz
+Author: Joe Scott, Federico Mora
+Author-email: joseph.scott@uwaterloo.ca, fmora@cs.toronto.edu
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
