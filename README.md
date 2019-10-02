@@ -13,3 +13,6 @@ banditfuzz /Absolute/Path/To/Solver1/Directory /Absolute/Path/To/Solver2/Directo
 ```
 
 When done: `deactivate`
+
+In each solver directory, BanditFuzz presuposes the existance of a `run.sh` script, that takes one command line argument, the name of the smt2 input to be solved. 
+
