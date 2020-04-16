@@ -56,32 +56,27 @@ def subprocess_cmd(command):
 def run_solver(cmd,instance,solver_name):
 	if solver_name in instance.times:
 		return		
-	f = tmpf.NamedTemporaryFile(delete=False)
-	instance.to_file(f.name)
-	cmd = "timeout " + str(settings.SolverTimeout) + " bash -c \'" + cmd.replace('$file',f.name) + '\''
+	instance.to_file('/tmp/')
+	cmd = "timeout " + str(settings.SolverTimeout) + " bash -c \'" + cmd.replace('$file','/tmp/' + instance.name) + '\''
 
 	start = time.time()
 	out = subprocess_cmd(cmd)
 	instance.times[solver_name] = min(time.time() - start,settings.SolverTimeout)
-	instance.stdout[solver_name] = out 
+	instance.results[solver_name] = out 
 	if out != "err" and out != "sat" and out != "unsat" and instance.times[solver_name] >= settings.SolverTimeout:
-		instance.stdout[solver_name] = "timeout"
+		instance.results[solver_name] = "timeout"
 
-	if not (instance.stdout[solver_name] == 'sat' or instance.stdout[solver_name] == 'unsat'):
+	if not (instance.results[solver_name] == 'sat' or instance.results[solver_name] == 'unsat'):
 		instance.times[solver_name] = settings.SolverTimeout
 
-	if out == 'empty':
-		print(str(instance))
-
-	process = subprocess.Popen("rm core*; rm filtered_file*;",stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-	proc_stdout,proc_stderr = process.communicate()
+	os.remove('/tmp/' + instance.name)
 
 class Solver:
 	def __init__(self,name):
 		self.name = name
 
 	def solve(self, instance):
-		run_solver("" + self.name + "/run.sh $file" , instance, self.name)
+		run_solver("" + self.name + " $file" , instance, self.name)
 		
 	def __name__(self):
 		return self.name

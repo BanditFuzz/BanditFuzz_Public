@@ -7,7 +7,6 @@ import numpy as np
 from banditfuzz.generators.gen import mk_gen
 from banditfuzz.instance import Instance
 from banditfuzz.interface.smtlib.script import SExpr
-from banditfuzz.util import LogPrint
 
 import  banditfuzz.interface.Settings as settings
 

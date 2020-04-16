@@ -5,19 +5,27 @@ from banditfuzz.interface.parseargs import parse
 #from banditfuzz.Solver import *
 from banditfuzz.fuzz import Fuzzer
 def main():
-    settings.SaveAllSolve = False
-    settings.BugMode = True
-    settings.SolverTimeout = 1000
+    settings.SaveAllSolve = True
+    settings.BugMode = False
+    settings.SolverTimeout = 10
     settings.GeneratorMaxDepth = 3
     settings.GeneratorNumConst = 3
     settings.NumPrimaries = 4
     settings.BanditTrainingMode = True
-    #settings.ConstRestrictRange_m1_p1 = True
+    
+    ## Full List of ops
+    ## Any subset should work.
+    settings.string_ops = ['Concat', 'Contains', 'At', 'Length', 'IndexOf2', 'PrefixOf', 'SuffixOf', 'Replace', 'ReInter', 'ReRange', 'RePlus', 'ReStar', 'ReConcat', 'Str2Re', 'InRegex', 'ToInt', 'Substring']
+
+
+    ##Database of inputs
+    settings.OutputDirectory = 'db/'
+
 
     parse()
 
     fuzzer = Fuzzer(settings.solvers,settings.mutator)
-    fuzzer.find_bugs()
+    fuzzer.fuzz()
 
 if __name__ == '__main__':
     main()

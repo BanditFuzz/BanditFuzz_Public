@@ -20,12 +20,17 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $DIR
 
 if ! [ -x "$(command -v python3)" ]; then
-  echo 'Error: python3 is not installed.' >&2
+  echo 'Error: python3 is not installed.'
   exit 1
 fi
 
 if ! [ -x "$(command -v pip3)" ]; then
-  echo 'Error: pip3 is not installed.' >&2
+  echo 'Error: pip3 is not installed.'
+  exit 1
+fi
+
+if ! [ -x "$(command -v virtualenv)" ]; then
+  echo 'Error: pip3 is not installed.'
   exit 1
 fi
 

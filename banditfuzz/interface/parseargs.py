@@ -18,7 +18,7 @@ def parse():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('solvers' , type=str,nargs='+')
 	parser.add_argument('ModelFile',type=str,nargs='?')
-	parser.add_argument('-str',action='store_true')
+	parser.add_argument('-fp',action='store_true')
 	parser.add_argument('-rt' ,action='store_true')
 	parser.add_argument('-all',action='store_true')
 
@@ -84,12 +84,12 @@ def parse():
 	# 		print("Solvers = " + str(solver_modules))
 	# 		sys.exit(1)
 	for solver in args.solvers:
-		assert os.path.isfile(solver + '/run.sh'), "No path to: " + solver + 'run.sh'
+		assert os.path.isfile(solver), "No path to: " + solver
 	settings.solver = list(args.solvers)
 	if not settings.NoBandit:	
 		if settings.ModelFile == None:
 			print("No Model File!")
-			sys.exit(1)
+			# sys.exit(1)
 
 	if settings.PythonRandomSeed == -1:
 		rng = randrange(sys.maxsize)
@@ -113,8 +113,6 @@ def parse():
 
 
 	if settings.OutputDirectory != "":
-		if settings.OutputDirectory[-1] == '/':
-			settings.OutputDirectory[-1] = settings.OutputDirectory[0:-1]
 		if not os.path.isdir(settings.OutputDirectory):
 			print("Creating directory: " + settings.OutputDirectory)
 			os.mkdir(settings.OutputDirectory)
@@ -143,10 +141,11 @@ def parse():
 		settings.OutputDirectory = None
 
 
-	if args.str:
-		settings.theory = 'QF_S'
-	else:
+	if args.fp:
 		settings.theory = 'QF_FP'
+	else:
+		settings.theory = 'QF_S'
+		
 
 	if args.rt:
 		settings.BugMode = False

@@ -1,0 +1,3 @@
+venv*
+*banditfuzz.egg-inf*
+*__pycache__*

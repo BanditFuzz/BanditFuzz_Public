@@ -1,7 +1,6 @@
 from banditfuzz.mutators.mutator import Mutator
 import numpy as np
 import banditfuzz.interface.Settings as settings
-from banditfuzz.util import LogPrint
 class Thompson(Mutator):
 	def __init__(self,ops):
 		self.nIter = 0

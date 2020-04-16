@@ -1,5 +1,5 @@
 from random import randint, random, choice
-import argparse
+import argparse,os,sys,pdb
 import  banditfuzz.interface.Settings as settings
 import banditfuzz.interface.smtlib.theories.fp as fp
 
@@ -9,8 +9,7 @@ from copy import copy, deepcopy
 from banditfuzz.solvers.solver import subprocess_cmd
 
 import tempfile as tmpf
-import pdb
-import sys
+
 
 class Generator:
     def __init__(self, ops, rounding_modes, eb, sb):
@@ -234,7 +233,7 @@ class Generator:
 
 class Generator_Str:
     def __init__(self):
-        self.ops = ['Concat', 'Contains', 'At', 'Length', 'IndexOf2', 'PrefixOf', 'SuffixOf', 'Replace', 'ReInter', 'ReRange', 'RePlus', 'ReStar', 'ReConcat', 'Str2Re', 'InRegex', 'ToInt', 'Substring']
+        self.ops = settings.string_ops
     def gen(self, depth=0):
         cmd =  'stringfuzzg -r random-ast -m '
         cmd += '--depth ' + str(settings.GeneratorMaxDepth) + ' '
@@ -301,9 +300,9 @@ class Generator_Str:
 
 
     def mutate(self,instance,action):
-        f = tmpf.NamedTemporaryFile(delete=False)
-        instance.to_file(f.name)
-        cmd   =  'stringfuzzx --file ' + f.name + ' '
+        fname = '/tmp/' + instance.name
+        instance.to_file('/tmp/')
+        cmd   =  'stringfuzzx --file ' + fname + ' '
         cmd  += '--random ' 
         cmd  += 'bandit --operator \'' + action + '\''
 
@@ -315,7 +314,7 @@ class Generator_Str:
             smt = '(set-logic QF_S)' + smt
 
 
-
+        os.remove(fname)
         assert smt != 'err' or smt != 'timeout' or smt != 'empty'
         assert smt.count('assert') > 0, smt + '\n' + ' on input: ' + str(instance) + ' with action ' + str(action) + ' with command: ' + cmd
         return Instance(smt)

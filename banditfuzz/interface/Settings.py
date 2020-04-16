@@ -1,3 +1,5 @@
+
+
 FuzzerNumberOfGenerations		        = 25
 FuzzerPopulation 				        = 5
 FuzzerNumberOfMutations		            = 2
@@ -162,3 +164,6 @@ descriptions ={
 	"SaveAllSolve"					: "Save all solved instances",
 	"PrimarySolver"					: "Primary Solver (defaulted to first argument)"
 }
+
+
+string_ops =  ['Concat', 'Contains', 'At', 'Length', 'IndexOf2', 'PrefixOf', 'SuffixOf', 'Replace', 'ReInter', 'ReRange', 'RePlus', 'ReStar', 'ReConcat', 'Str2Re', 'InRegex', 'ToInt', 'Substring']
