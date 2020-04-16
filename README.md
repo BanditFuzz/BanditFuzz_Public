@@ -8,12 +8,12 @@ To run Banditfuzz:
 ```
 source venv/bin/activate
 
-banditfuzz /Absolute/Path/To/Solver1/Directory /Absolute/Path/To/Solver2/Directory ... --ModelFile file --OutputDirectory db -str -rt
+banditfuzz /Absolute/Path/To/Solver1/run.sh /Absolute/Path/To/Solver2/run.sh
 
 ```
 
 When done: `deactivate`
 
-In each solver directory, BanditFuzz presuposes the existance of a `run.sh` script, that takes one command line argument, the name of the smt2 input to be solved. 
+In the above example, the `run.sh` script, takes one command line argument, the name of the smt2 input to be solved, and runs the solver on that input, and prints the result to stdout. 
 
-The `-rt` flag switches from bug fuzzing to runtime fuzzing. BanditFuzz will try to maximize the runtime of the first solver. If there are multiple solvers, BanditFuzz will maximize the margin between them (against the first). 
+`QF_S,QF_FP` are supported.
