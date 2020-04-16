@@ -5,12 +5,12 @@ from banditfuzz.interface.parseargs import parse
 #from banditfuzz.Solver import *
 from banditfuzz.fuzz import Fuzzer
 def main():
-    settings.SaveAllSolve = True
-    settings.BugMode = False
-    settings.SolverTimeout = 10
-    settings.GeneratorMaxDepth = 3
-    settings.GeneratorNumConst = 3
-    settings.NumPrimaries = 4
+    settings.SaveAllSolve = False
+    settings.SolverTimeout = 1000
+
+    settings.GeneratorMaxDepth = 3  ##Depth of each asserting AST
+    settings.GeneratorNumConst = 3  ##The num-vars option in stringfuzz
+    settings.NumPrimaries = 4       ##Number of asserting ASTs
     settings.BanditTrainingMode = True
     
     ## Full List of ops

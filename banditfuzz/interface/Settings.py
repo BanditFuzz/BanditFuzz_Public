@@ -1,6 +1,6 @@
 
 
-FuzzerNumberOfGenerations		        = 25
+FuzzerNumberOfGenerations		        = 100
 FuzzerPopulation 				        = 5
 FuzzerNumberOfMutations		            = 2
 FuzzerNumberOfHardestKept		        = 1
