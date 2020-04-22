@@ -1,8 +1,12 @@
 import sys,os,copy,pdb,random,time
 import numpy as np
 import banditfuzz.interface.Settings as settings
-
 from banditfuzz.interface.smtlib.script import SMTLIBScript,print_sexp
+from banditfuzz.solver import run_solver
+
+def par2(x): 
+	if x < settings.timeout: return x
+	else: return 2.0 * settings.timeout
 
 class Instance(SMTLIBScript):
 	def __init__(self,val=None):
@@ -16,46 +20,27 @@ class Instance(SMTLIBScript):
 		self.times = {}
 		self.results = {}
 		self.name = str(time.time()).replace(".","") + str(os.getpid()) + str(random.randint(0,99999999)) + ".smt2"
-		self.computed_score = None
+		self.err_log = {}
+		self._score = None
+	def solve(self):
+		for solver in settings.solvers:
+			out, time, dump = run_solver(self,solver)
+			self.results[solver] = out
+			self.times[solver] = par2(time)
+			if out is 'err': self.err_log[solver] = dump
+		if len(self.err_log) > 0:
+			self.to_file(settings.db + '/crashes/')
 
 	def score(self):
-		if len(self.times) == 0: return None
-		if self.computed_score != None: return self.computed_score
-		self.computed_score = 0.0
+		if self._score != None: return self._score
 		if self.inconsistent():
-			self.to_file(settings.OutputDirectory + 'bugs/')
-			if settings.BugMode: return 1.0
-			else: return 0
-		else:
-			if settings.BugMode: return 0.0
-
-
-		for solver in self.results:
-			if self.results[solver].lower() not in ['sat', 'unsat', 'timeout']:
-				self.to_file(settings.OutputDirectory + 'crashes/')
-				return 0.0
-
-		if len(self.times) == 1:
-			self.computed_score = 0.0
-			for solver in self.times:
-				self.computed_score += self.times[solver]
-		else:
-			main_score = -1
-			other_score = -999999999999999.0
-			pdb.set_trace()
-			for solver in self.times:
-				if solver == settings.PrimarySolver:
-					main_score = self.times[solver]
-				else:
-					other_score = max(other_score,self.times[solver])
-		
-			if other_score >= settings.SolverTimeout:
-				other_score = settings.SolverTimeout * 3.0
-			if main_score >= settings.SolverTimeout:
-				main_score = settings.SolverTimeout * 3.0
-			self.computed_score = main_score - other_score
-		return self.computed_score
-		
+			self.to_file(settings.db + 'bugs/')
+			if settings.BugMode: self._score = 1.0
+		elif settings.BugMode: self._score = 0.0
+		elif len(self.err_log) > 0: self._score = 0.0
+		elif len(self.times) == 1: self._score = par2(self.times[settings.solvers[0]]) if settings.solvers[0] not in self.err_log else float('-inf')
+		else: self._score = par2(self.times[settings.solvers[0]]) - max([par2(self.times[solver]) for solver in settings.solvers if solver != settings.solvers[0] and solver not in self.err_log])
+		return self._score
 	def mk_auxilary(self):
 		assert settings.theory == 'QF_FP'
 		for c in self.funcs:
@@ -150,18 +135,21 @@ class Instance(SMTLIBScript):
 				ret += self.num_float_ops(arg)
 			return ret
 
-	def to_file(self,loc):
+	def to_file(self,loc,name=None):
+		if name == None: name = self.name
 		if loc[-1] != '/': loc = loc + '/'
-		with open(loc + self.name ,'w') as outFile:
+		with open(loc + name ,'w') as outFile:
 			outFile.write(";  depth   = " + str(settings.GeneratorMaxDepth) + "\n")
 			outFile.write(";  nconst  = " + str(settings.GeneratorNumConst) + "\n")
 			if settings.theory == 'QF_FP':
 				outFile.write(";  fplen   = " + str(settings.FloatWidth) + "\n")
 			outFile.write(";  assertions = " + str(settings.NumPrimaries ) + "\n")
-			outFile.write(";  timeout = " + str(settings.SolverTimeout) + "\n")		
+			outFile.write(";  timeout = " + str(settings.timeout) + "\n")		
 			outFile.write(";  time    = "  + str(self.times) 		+ "\n" )
 			if settings.theory == 'QF_FP':				
 				outFile.write(";  terms   = "  + str(n_terms) 	+ "\n" )
+			if len(self.err_log) > 0:				
+				outFile.write(";  output   = "  + str(self.err_log) 	+ "\n" )
 			outFile.write(";  score   = "  + str(self.score())	+ "\n")
 			outFile.write(";  result  = "  + str(self.results)  		+ "\n")
 			outFile.write(str(self))

@@ -4,12 +4,14 @@ FuzzerNumberOfGenerations		        = 100
 FuzzerPopulation 				        = 5
 FuzzerNumberOfMutations		            = 2
 FuzzerNumberOfHardestKept		        = 1
-FuzzerNumberPopulationStart	            = 1
+FuzzerNumberPopulationStart	            = 5
 BugMode						            = False
-SolverTimeout					        = 100
-GeneratorMaxDepth				        = 6
-GeneratorNumConst				        = 10
+timeout							        = 2500
+GeneratorMaxDepth				        = 5
+GeneratorNumConst				        = 5
 NoBandit = False
+
+num_assertions							= 5
 
 #Theory
 theory = None #['QF_FP', 'QF_S']
@@ -76,11 +78,6 @@ STR_ToInt 							= True
 STR_FromInt							= True
 STR_Substring						= True
 
-Final_Input_Prefix = None
-
-
-
-
 ConstNonNanTerms 				        = False
 ConstNonInfTerms 				        = False
 ConstNonZeroTerms 			            = False
@@ -93,77 +90,10 @@ BanditNumberTrainingIterations          = 99999999999999999999999999999
 ModelFile						        = ""
 RewardLogFile							= ""
 ScoreLogFile							= ""
-OutputDirectory							= ""
-pdb							            = False
-SaveAllSolve							= False
+db										= None
+
+save_all							= False
 
 solvers = []
-mutator = None
-
-NumPrimaries							= 5
-PrimarySolver							= ""
-
-
-descriptions ={ 
-	"FuzzerNumberOfGenerations"		: "Number of generations in fuzzer.",
-	"FuzzerPopulation" 				: "Number in population of current generation.",
-	"FuzzerNumberOfMutations"		: "Number of mutations performed on best observed instances",
-	"FuzzerNumberOfHardestKept"		: "Number of hardest instances carried over into the next generation.",
-	"FuzzerNumberPopulationStart"	: "Number of instances in the initial generation.",
-	"BugMode"						: "Fuzz for inconsistencies amongst solvers. (Training only.)",
-	"SolverTimeout"					: "Timeout for all solvers.",
-	"GeneratorMaxDepth"				: "Max depth of AST",
-	"GeneratorNumConst"				: "Number of unique constants in assertions.",
-	"FP_Abs" 	 				: "Allow for generated formula with fp.abs",
-	"FP_Neg"    				: "Allow for generated formula with fp.neg",
-	"FP_Add"    				: "Allow for generated formula with fp.add",
-	"FP_Sub"    				: "Allow for generated formula with fp.sub",
-	"FP_Mul"    				: "Allow for generated formula with fp.mul",
-	"FP_Div"   				: "Allow for generated formula with fp.div",
-	"FP_FMA"   				: "Allow for generated formula with fp.fma",
-	"FP_Rem"   				: "Allow for generated formula with fp.rem",
-	"FP_R2I"   				: "Allow for generated formula with fp.roundToIntegral",
-	"FP_Sqrt"   				: "Allow for generated formula with fp.sqrt",
-	"FP_Min"    				: "Allow for generated formula with fp.min",
-	"FP_Max"    				: "Allow for generated formula with fp.max",
-	"FP_Leq"    				: "Allow for generated formula with fp.leq",
-	"FP_Lt"     				: "Allow for generated formula with fp.lt",
-	"FP_Geq"    				: "Allow for generated formula with fp.geq",
-	"FP_Gt"     				: "Allow for generated formula with fp.gt",
-	"FP_Eq"     				: "Allow for generated formula with fp.eq",
-	"FP_IsNorm" 				: "Allow for generated formula with fp.isNormal",
-	"FP_IsSub"  				: "Allow for generated formula with fp.IsSubnormal",
-	"FP_IsZero" 				: "Allow for generated formula with fp.IsZero",
-	"FP_IsNan"  				: "Allow for generated formula with fp.IsNaN",
-	"FP_IsNeg"  				: "Allow for generated formula with fp.IsNeg",
-	"FP_IsPos"  				: "Allow for generated formula with fp.IsPos",
-	"FP_RNE"				: "Allow for generated formula with rounding mode RNE (round nearest even)",
-	"FP_RNA"				: "Allow for generated formula with rounding mode RNA (round nearest away)",
-	"FP_RTP"				: "Allow for generated formula with rounding mode RTP (round towards positive inf)",
-	"FP_RTN"				: "Allow for generated formula with rounding mode RTN (round towards negative inf)",
-	"FP_RTZ"				: "Allow for generated formula with rounding mode RTZ (round towards 0)",
-	"ForceSatisfiableInstance" 		: "Force staisfiable instances by creating (a or (not a)) styled assertions.",
-	"ForceUnsatisfiableInstance" 	: "Force unsatisfiable instances by creating (a and (not a)) styled instances",
-	"Verbose" 						: "Printer Verbosity level.",
-	"FloatWidth" 					: "Width of floating point constants.",
-	"ConstNonNanTerms" 				: "Add auxilary assertion to prevent NaN consts",
-	"ConstNonInfTerms" 				: "Add auxilary assertion to prevent Inf consts",
-	"ConstNonZeroTerms" 			: "Add auxilary assertion to prevent 0 consts",
-	"ConstNonSubNormalTerms" 		: "Add auxilary assertions to prevent subnormal consts.",
-	"ConstRestrictRange_m1_p1" 		: "Restrict consts to be within the interval [-1,1]",
-	"ConstRestrictRange_fpmin_fpmax": "Restrict consts to be within the interval [fp32.min, fp32.max]",
-	"PythonRandomSeed" 				: "Random seed used in generation",
-	"BanditTrainingMode" 			: "Bandit training.",
-	"BanditNumberTrainingIterations": "Capped number of training iterations.",
-	"ModelFile"						: "Model File of Learned Mutator",
-	"RewardLogFile"					: "Log of rewards over training iterations.",
-	"ScoreLogFile"					: "Log of scores over generation for RunTime Fuzzing",
-	"OutputDirectory"				: "Directory of returned instances",
-	"NumPrimaries"					: "Number of primary assertions in generated instances.",
-	"pdb"							: "Enter PDB trace",
-	"SaveAllSolve"					: "Save all solved instances",
-	"PrimarySolver"					: "Primary Solver (defaulted to first argument)"
-}
-
 
 string_ops =  ['Concat', 'Contains', 'At', 'Length', 'IndexOf2', 'PrefixOf', 'SuffixOf', 'Replace', 'ReInter', 'ReRange', 'RePlus', 'ReStar', 'ReConcat', 'Str2Re', 'InRegex', 'ToInt', 'Substring']

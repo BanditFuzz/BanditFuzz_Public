@@ -2,7 +2,7 @@ import  banditfuzz.interface.Settings as settings
 from random import randrange,seed
 from banditfuzz.mutators import mutator
 from banditfuzz.mutators.mutator import Mutator
-import banditfuzz.solvers.solver as solvers
+import banditfuzz.solvers as solvers
 import banditfuzz.mutators as mutators
 import banditfuzz.solvers as solvers
 import sys,inspect
@@ -17,22 +17,23 @@ import glob
 def parse():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('solvers' , type=str,nargs='+')
-	parser.add_argument('ModelFile',type=str,nargs='?')
-	parser.add_argument('-fp',action='store_true')
-	parser.add_argument('-rt' ,action='store_true')
-	parser.add_argument('-all',action='store_true')
-
-	for arg in dir(settings):
-		if not arg.startswith("__") and arg != 'descriptions' and arg != 'solvers' and arg != 'mutator':
-			if arg in settings.descriptions:
-				parser.add_argument('--' + arg ,type = type(getattr(settings,arg)), default=getattr(settings,arg), help=settings.descriptions[arg])
-			else:
-				parser.add_argument('--' + arg ,type = type(getattr(settings,arg)), default=getattr(settings,arg), help="No provided description.")
 	args = parser.parse_args()
+	# parser.add_argument('ModelFile',type=str,nargs='?')
+	# parser.add_argument('-fp',action='store_true')
+	# parser.add_argument('-rt' ,action='store_true')
+	# parser.add_argument('-all',action='store_true')
+
+	# for arg in dir(settings):
+	# 	if not arg.startswith("__") and arg != 'descriptions' and arg != 'solvers' and arg != 'mutator':
+	# 		if arg in settings.descriptions:
+	# 			parser.add_argument('--' + arg ,type = type(getattr(settings,arg)), default=getattr(settings,arg), help=settings.descriptions[arg])
+	# 		else:
+	# 			parser.add_argument('--' + arg ,type = type(getattr(settings,arg)), default=getattr(settings,arg), help="No provided description.")
+	# 
 	
-	for a in dir(args):
-		if not a.startswith('_'):
-			setattr(settings,a,getattr(args,a))
+	# for a in dir(args):
+	# 	if not a.startswith('_'):
+	# 		setattr(settings,a,getattr(args,a))
 
 
 	# if not settings.NoBandit:	
@@ -85,34 +86,30 @@ def parse():
 	# 		sys.exit(1)
 	for solver in args.solvers:
 		assert os.path.isfile(solver), "No path to: " + solver
-	settings.solver = list(args.solvers)
-	if not settings.NoBandit:	
-		if settings.ModelFile == None:
-			print("No Model File!")
-			# sys.exit(1)
+	settings.solvers = list(args.solvers)
 
-	if settings.PythonRandomSeed == -1:
-		rng = randrange(sys.maxsize)
-		seed(rng)
-		np.random.seed(rng % (2 ** 32 -1))
-		print("Using RNG:", rng)
-		settings.PythonRandomSeed = rng
+	# if settings.PythonRandomSeed == -1:
+	# 	rng = randrange(sys.maxsize)
+	# 	seed(rng)
+	# 	np.random.seed(rng % (2 ** 32 -1))
+	# 	print("Using RNG:", rng)
+	# 	settings.PythonRandomSeed = rng
 
-	if settings.RewardLogFile == "":
-		print("No specified reward file.")
-		print("Rewards will be printed to stdout")
-		settings.RewardLogFile = None
-	else:
-		file = open(settings.RewardLogFile,"w")
-		file.close()
+	# if settings.RewardLogFile == "":
+	# 	print("No specified reward file.")
+	# 	print("Rewards will be printed to stdout")
+	# 	settings.RewardLogFile = None
+	# else:
+	# 	file = open(settings.RewardLogFile,"w")
+	# 	file.close()
 	
-	if settings.ScoreLogFile == "":
-		print("No specified file for score logging.")
-		print("Scores can be found in stdout")
-		settings.ScoreLogFile = None
+	# if settings.ScoreLogFile == "":
+	# 	print("No specified file for score logging.")
+	# 	print("Scores can be found in stdout")
+	# 	settings.ScoreLogFile = None
 
 
-	if settings.OutputDirectory != "":
+	if settings.db != None:
 		if not os.path.isdir(settings.OutputDirectory):
 			print("Creating directory: " + settings.OutputDirectory)
 			os.mkdir(settings.OutputDirectory)
@@ -141,12 +138,12 @@ def parse():
 		settings.OutputDirectory = None
 
 
-	if args.fp:
-		settings.theory = 'QF_FP'
-	else:
-		settings.theory = 'QF_S'
+	# if False:
+	# 	settings.theory = 'QF_FP'
+	# else:
+	settings.theory = 'QF_S'
 		
 
-	if args.rt:
-		settings.BugMode = False
+	# if args.rt:
+	# 	settings.BugMode = False
 	

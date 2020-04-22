@@ -6,12 +6,14 @@ from banditfuzz.interface.parseargs import parse
 from banditfuzz.fuzz import Fuzzer
 def main():
     settings.SaveAllSolve = False
-    settings.SolverTimeout = 1000
+    settings.timeout = 5
 
     settings.GeneratorMaxDepth = 3  ##Depth of each asserting AST
     settings.GeneratorNumConst = 3  ##The num-vars option in stringfuzz
     settings.NumPrimaries = 4       ##Number of asserting ASTs
     settings.BanditTrainingMode = True
+
+    settings.db = 'db'
     
     ## Full List of ops
     ## Any subset should work.
@@ -24,7 +26,7 @@ def main():
 
     parse()
 
-    fuzzer = Fuzzer(settings.solvers,settings.mutator)
+    fuzzer = Fuzzer()
     fuzzer.fuzz()
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ import banditfuzz.interface.smtlib.theories.fp as fp
 from banditfuzz.interface.smtlib.script import SExpr
 from banditfuzz.instance import Instance
 from copy import copy, deepcopy
-from banditfuzz.solvers.solver import subprocess_cmd
+from banditfuzz.solver import run_command
 
 import tempfile as tmpf
 
@@ -239,7 +239,7 @@ class Generator_Str:
         cmd += '--depth ' + str(settings.GeneratorMaxDepth) + ' '
         cmd += '--num-asserts ' + str(settings.NumPrimaries) + ' '
         cmd += '--num-vars ' + str(settings.GeneratorNumConst) + ' '
-        smt = subprocess_cmd(cmd)
+        smt, err, time = run_command(cmd)
         if smt.count('(set-logic QF_S)') == 0:
             smt = '(set-logic QF_S)' + smt
 
@@ -309,7 +309,7 @@ class Generator_Str:
         #cmd += '--num-asserts ' + str(settings.NumPrimaries) + ' '
         #cmd += '--num-vars ' + str(settings.GeneratorNumConst) + ' '
         #print("Mutated with the following command: " + cmd)
-        smt = subprocess_cmd(cmd)
+        smt,_,_ = run_command(cmd)
         if smt.count('(set-logic QF_S)') == 0:
             smt = '(set-logic QF_S)' + smt
 
