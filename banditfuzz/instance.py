@@ -34,7 +34,7 @@ class Instance(SMTLIBScript):
 	def score(self):
 		if self._score != None: return self._score
 		if self.inconsistent():
-			self.to_file(settings.db + 'bugs/')
+			self.to_file(settings.db + '/bugs/')
 			if settings.BugMode: self._score = 1.0
 		elif settings.BugMode: self._score = 0.0
 		elif len(self.err_log) > 0: self._score = 0.0
