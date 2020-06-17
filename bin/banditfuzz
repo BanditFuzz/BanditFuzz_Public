@@ -17,7 +17,12 @@ def main():
     
     ## Full List of ops
     ## Any subset should work.
-    settings.string_ops = ['Concat', 'Contains', 'At', 'Length', 'IndexOf2', 'PrefixOf', 'SuffixOf', 'Replace', 'ReInter', 'ReRange', 'RePlus', 'ReStar', 'ReConcat', 'Str2Re', 'InRegex', 'ToInt', 'Substring']
+    settings.string_ops = [
+        #'and','or','not','=','
+        'Concat','Contains','Length','IndexOf','IndexOf2','PrefixOf','SuffixOf','Replace','Substring','FromInt','ToInt',
+        #'InRegex','At',
+        'Str2Re','ReConcat','ReStar','RePlus','ReRange','ReUnion','ReInter'
+    ]
 
 
     ##Database of inputs
