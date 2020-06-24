@@ -313,14 +313,30 @@ class Generator_Str:
         cmd += '--num-vars ' + str(settings.GeneratorNumConst) + ' '
         cmd += '-o ' + "".join([v+ ',' for v in settings.string_ops])
         print("Mutated with the following command: " + cmd)
-        smt,_,_ = run_command(cmd)
-        if smt.count('(set-logic QF_S)') == 0:
-            smt = '(set-logic QF_S)' + smt
+        loop_count = 0
+        while True:
+            loop_count += 1
+            if loop_count > 100: 
+                print("To many failed transformations")
+                raise ValueError
+            try:
+                smt,_,_ = run_command(cmd)
+                if smt.count('(set-logic QF_S)') == 0:
+                    smt = '(set-logic QF_S)' + smt
 
+
+                assert smt != 'err' or smt != 'timeout' or smt != 'empty'
+                assert smt.count('assert') > 0, smt + '\n' + ' on input: ' + str(instance) + ' with action ' + str(action) + ' with command: ' + cmd
+                break
+            except Exception as e:
+                print("On input:")
+                print(instance)
+                print("On action:" , action)
+                print("Outputed illegal smt2 file:")
+                print(smt)
+                print("Mutated with the following command: " + cmd)
 
         os.remove(fname)
-        assert smt != 'err' or smt != 'timeout' or smt != 'empty'
-        assert smt.count('assert') > 0, smt + '\n' + ' on input: ' + str(instance) + ' with action ' + str(action) + ' with command: ' + cmd
         return Instance(smt)
 
 def mk_gen():
