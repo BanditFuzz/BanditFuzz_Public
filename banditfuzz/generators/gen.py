@@ -309,9 +309,10 @@ class Generator_Str:
         cmd  += '--random ' 
         cmd  += 'bandit --operator \'' + action + '\''
 
-        #cmd += '--num-asserts ' + str(settings.NumPrimaries) + ' '
-        #cmd += '--num-vars ' + str(settings.GeneratorNumConst) + ' '
-        #print("Mutated with the following command: " + cmd)
+        cmd += '--num-asserts ' + str(settings.NumPrimaries) + ' '
+        cmd += '--num-vars ' + str(settings.GeneratorNumConst) + ' '
+        cmd += '-o ' + "".join([v+ ',' for v in settings.string_ops])
+        print("Mutated with the following command: " + cmd)
         smt,_,_ = run_command(cmd)
         if smt.count('(set-logic QF_S)') == 0:
             smt = '(set-logic QF_S)' + smt
