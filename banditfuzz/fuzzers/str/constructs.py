@@ -1,10 +1,9 @@
-from ..construct import Construct
 import random
 
-class STR_CONCAT(Construct):
+class CONCAT(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'str', 'str',
             'str'
@@ -14,10 +13,10 @@ class STR_CONCAT(Construct):
         return "str.++"
     __repr__ = __str__
 
-class STR_LEN(Construct):
+class LEN(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'int'
+        self.sort = 'int'
         self.sig = [
             'str',
             'int'
@@ -26,10 +25,10 @@ class STR_LEN(Construct):
     def __str__(self):
         return "str.len"
     __repr__ = __str__
-class STR_LEX_ORD(Construct):
+class LEX_ORD(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'bool'
+        self.sort = 'bool'
         self.sig = [
             'str', 'str',
             'bool'
@@ -38,10 +37,10 @@ class STR_LEX_ORD(Construct):
     def __str__(self):
         return "str.<"
     __repr__ = __str__
-class STR_TO_REG(Construct):
+class TO_REG(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'str',
             'reg'
@@ -50,10 +49,10 @@ class STR_TO_REG(Construct):
     def __str__(self):
         return "str.to_re"
     __repr__ = __str__
-class STR_IN_REG(Construct):
+class IN_REG(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'bool'
+        self.sort = 'bool'
         self.sig = [
             'str', 'reg',
             'bool'
@@ -62,10 +61,10 @@ class STR_IN_REG(Construct):
     def __str__(self):
         return "str.in_re"
     __repr__ = __str__
-class STR_NONE(Construct):
+class NONE(Construct):
     def __init__(self):
         self.arity = 0
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             # no input
             'reg'
@@ -74,10 +73,10 @@ class STR_NONE(Construct):
     def __str__(self):
         return "re.none"
     __repr__ = __str__
-class STR_RE_ALL(Construct):
+class RE_ALL(Construct):
     def __init__(self):
         self.arity = 0
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             #None
             'reg'
@@ -86,10 +85,10 @@ class STR_RE_ALL(Construct):
     def __str__(self):
         return "re.all"
     __repr__ = __str__
-class STR_RE_ALLCHAR(Construct):
+class RE_ALLCHAR(Construct):
     def __init__(self):
         self.arity = 0
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             #None
             'reg'
@@ -98,10 +97,10 @@ class STR_RE_ALLCHAR(Construct):
     def __str__(self):
         return "re.allchar"
     __repr__ = __str__
-class STR_RE_CONCAT(Construct):
+class RE_CONCAT(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 'reg'
             'reg'
@@ -110,10 +109,10 @@ class STR_RE_CONCAT(Construct):
     def __str__(self):
         return "re.++"
     __repr__ = __str__
-class STR_RE_UNION(Construct):
+class RE_UNION(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 'reg',
             'reg'
@@ -122,10 +121,10 @@ class STR_RE_UNION(Construct):
     def __str__(self):
         return "re.union"
     __repr__ = __str__
-class STR_RE_INTER(Construct):
+class RE_INTER(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 'reg',
             'reg'
@@ -134,10 +133,10 @@ class STR_RE_INTER(Construct):
     def __str__(self):
         return "re.inter"
     __repr__ = __str__
-class STR_RE_KLEENE(Construct):
+class RE_KLEENE(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg',
             'reg'
@@ -146,10 +145,10 @@ class STR_RE_KLEENE(Construct):
     def __str__(self):
         return "re.*"
     __repr__ = __str__
-class STR_LEQ(Construct):
+class LEQ(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'bool'
+        self.sort = 'bool'
         self.sig = [
             'str', 'str'
             'bool'
@@ -158,10 +157,10 @@ class STR_LEQ(Construct):
     def __str__(self):
         return "str.<="
     __repr__ = __str__
-class STR_AT(Construct):
+class AT(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'str', 'int'
             'str'
@@ -170,10 +169,10 @@ class STR_AT(Construct):
     def __str__(self):
         return "str.at"
     __repr__ = __str__
-class STR_SUBSTR(Construct):
+class SUBSTR(Construct):
     def __init__(self):
         self.arity = 3
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'str', 'int', 'int'
             'str'
@@ -182,10 +181,10 @@ class STR_SUBSTR(Construct):
     def __str__(self):
         return "str.substr"
     __repr__ = __str__
-class STR_PREFIXOF(Construct):
+class PREFIXOF(Construct):
     def __init__(self):
         self.arity = 3
-        self.type = 'bool'
+        self.sort = 'bool'
         self.sig = [
             'str', 'int', 'int'
             'str'
@@ -194,10 +193,10 @@ class STR_PREFIXOF(Construct):
     def __str__(self):
         return "str.substr"
     __repr__ = __str__
-class STR_SUFFIXOF(Construct):
+class SUFFIXOF(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'bool'
+        self.sort = 'bool'
         self.sig = [
             'str', 'str'
             'bool'
@@ -207,10 +206,10 @@ class STR_SUFFIXOF(Construct):
         return "str.suffixof"
     __repr__ = __str__
 
-class STR_CONTAINS(Construct):
+class CONTAINS(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'bool'
+        self.sort = 'bool'
         self.sig = [
             'str', 'str'
             'bool'
@@ -220,10 +219,10 @@ class STR_CONTAINS(Construct):
         return "str.contains"
     __repr__ = __str__
 
-class STR_INDEXOF(Construct):
+class INDEXOF(Construct):
     def __init__(self):
         self.arity = 3
-        self.type = 'int'
+        self.sort = 'int'
         self.sig = [
             'str', 'str','int'
             'int'
@@ -232,10 +231,10 @@ class STR_INDEXOF(Construct):
     def __str__(self):
         return "str.indexof"
     __repr__ = __str__
-class STR_REPLACE(Construct):
+class REPLACE(Construct):
     def __init__(self):
         self.arity = 3
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'str', 'str','str'
             'str'
@@ -244,10 +243,10 @@ class STR_REPLACE(Construct):
     def __str__(self):
         return "str.replace"
     __repr__ = __str__
-class STR_REPLACE_ALL(Construct):
+class REPLACE_ALL(Construct):
     def __init__(self):
         self.arity = 3
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'str', 'str','str'
             'str'
@@ -256,10 +255,10 @@ class STR_REPLACE_ALL(Construct):
     def __str__(self):
         return "str.replace_all"
     __repr__ = __str__
-class STR_REPLACE_RE(Construct):
+class REPLACE_RE(Construct):
     def __init__(self):
         self.arity = 3
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'str', 'reg','str'
             'str'
@@ -268,10 +267,10 @@ class STR_REPLACE_RE(Construct):
     def __str__(self):
         return "str.replace_re"
     __repr__ = __str__
-class STR_REPLACE_RE_ALL(Construct):
+class REPLACE_RE_ALL(Construct):
     def __init__(self):
         self.arity = 3
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'str', 'reg','str'
             'str'
@@ -280,10 +279,10 @@ class STR_REPLACE_RE_ALL(Construct):
     def __str__(self):
         return "str.replace_re_all"
     __repr__ = __str__
-class STR_REG_COMP(Construct):
+class REG_COMP(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 
             'reg'
@@ -292,10 +291,10 @@ class STR_REG_COMP(Construct):
     def __str__(self):
         return "re.comp"
     __repr__ = __str__
-class STR_REG_DIFF(Construct):
+class REG_DIFF(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 'reg'
             'reg'
@@ -304,10 +303,10 @@ class STR_REG_DIFF(Construct):
     def __str__(self):
         return "re.diff"
     __repr__ = __str__
-class STR_REG_COMP(Construct):
+class REG_COMP(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 
             'reg'
@@ -316,10 +315,10 @@ class STR_REG_COMP(Construct):
     def __str__(self):
         return "re.comp"
     __repr__ = __str__
-class STR_REG_DIFF(Construct):
+class REG_DIFF(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 'reg'
             'reg'
@@ -328,10 +327,10 @@ class STR_REG_DIFF(Construct):
     def __str__(self):
         return "re.diff"
     __repr__ = __str__
-class STR_REG_OPT(Construct):
+class REG_OPT(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg',
             'reg'
@@ -340,10 +339,10 @@ class STR_REG_OPT(Construct):
     def __str__(self):
         return "re.opt"
     __repr__ = __str__
-class STR_REG_RANGE(Construct):
+class REG_RANGE(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'str', 'str'
             'reg'
@@ -352,10 +351,10 @@ class STR_REG_RANGE(Construct):
     def __str__(self):
         return "re.range"
     __repr__ = __str__
-class STR_REG_RANGE(Construct):
+class REG_RANGE(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'str', 'str'
             'reg'
@@ -364,10 +363,10 @@ class STR_REG_RANGE(Construct):
     def __str__(self):
         return "re.range"
     __repr__ = __str__
-class STR_RE_LOOP(Construct):
+class RE_LOOP(Construct):
     def __init__(self):
         self.arity = 2
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 'reg'
             'reg'
@@ -376,10 +375,10 @@ class STR_RE_LOOP(Construct):
     def __str__(self):
         return f"(_ re.loop {random.randint(0,10**6)} {random.randint(0,10**6)})" #a bit hacky... suggestions?
     __repr__ = __str__
-class STR_RE_POW(Construct):
+class RE_POW(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'reg'
+        self.sort = 'reg'
         self.sig = [
             'reg', 
             'reg'
@@ -388,10 +387,10 @@ class STR_RE_POW(Construct):
     def __str__(self):
         return f"(_ re.^ {random.randint(0,10**6)})" #a bit hacky... suggestions?
     __repr__ = __str__
-class STR_IS_DIGIT(Construct):
+class IS_DIGIT(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'str',
             'bool'
@@ -400,10 +399,10 @@ class STR_IS_DIGIT(Construct):
     def __str__(self):
         return "str.is_digit"
     __repr__ = __str__
-class STR_TO_CODE(Construct):
+class TO_CODE(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'int'
+        self.sort = 'int'
         self.sig = [
             'str',
             'int'
@@ -412,10 +411,10 @@ class STR_TO_CODE(Construct):
     def __str__(self):
         return "str.to_code"
     __repr__ = __str__
-class STR_FROM_CODE(Construct):
+class FROM_CODE(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'int',
             'str'
@@ -424,10 +423,10 @@ class STR_FROM_CODE(Construct):
     def __str__(self):
         return "str.from_code"
     __repr__ = __str__
-class STR_TO_INT(Construct):
+class TO_INT(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'int'
+        self.sort = 'int'
         self.sig = [
             'str',
             'int'
@@ -436,10 +435,10 @@ class STR_TO_INT(Construct):
     def __str__(self):
         return "str.to_int"
     __repr__ = __str__
-class STR_FROM_INT(Construct):
+class FROM_INT(Construct):
     def __init__(self):
         self.arity = 1
-        self.type = 'str'
+        self.sort = 'str'
         self.sig = [
             'int',
             'str'

@@ -1,6 +1,7 @@
 from ..parser import args as settings
 from .node import Node
 from .benchmark import Benchmark
+from sklearn.preprocessing import normalize as norm
 import inspect,pdb
 
 class Fuzzer:
@@ -9,18 +10,8 @@ class Fuzzer:
         self.quantifed = False
         self.quantifiers = []
         self.actions = []
-        self.sorts = {
-            'bool'  : [],
-            'fp'    : [],
-            'bv'    : [],
-            'int'   : [],
-            'real'  : [],
-            'str'   : [],
-            'reg'   : [],
-            'arr'   : [],
-        }
-
-        self.ops = {
+        self.literals = []
+        self.constructs = {
             'bool'  : [],
             'fp'    : [],
             'bv'    : [],
@@ -32,7 +23,12 @@ class Fuzzer:
             'uf'    : [],
             'round' : [],
         }
-
+        self._mk_from_settings()
+    def _mk_from_settings(self):
+        from . import core.constructs as core_constructs
+        from .core.literal import BoolLiteral
+        self.literals += [BoolLiteral]
+        self.constructs += [o[1] for o in inspect.getmembers(core_constructs) if inspect.isclass(o[1])]
         if settings.quantified:
             raise NotImplementedError
             self.quantifed = True
@@ -49,23 +45,25 @@ class Fuzzer:
             raise NotImplementedError
 
         if settings.strings:
-            self.logic += "S"
             from .str import constructs as str_const_mod
+            from .str import StrLiteral,RegExLiteral
+            self.literals += [STRLiteral(), RegExLiteral()]
+            self.logic += "S"
             str_constructs = [o[1] for o in inspect.getmembers(str_const_mod) if inspect.isclass(o[1])]
             self.actions += str_constructs
             for const in str_constructs: 
-                if hasattr(const(),'type'):
-                    self.ops[const().type].append(const)
+                self.constructs[const().type].append(const)
 
 
         if settings.fp:
+            from .fp import Literal as FP_Literal
+            from .fp import constructs
+            self.literals += [FP_Literal()]           
             self.logic += 'FP'
-            from .fp import constructs as fp_const_mod
             fp_constructs = [o[1] for o in inspect.getmembers(fp_const_mod) if inspect.isclass(o[1])]
             self.actions += fp_constructs
             for const in fp_constructs:
-                if hasattr(const(),'type'):
-                    self.ops[const().type].append(const)
+                self.constructs[const().type].append(const)
 
         if settings.bv:
             raise NotImplementedError
@@ -133,15 +131,25 @@ class Fuzzer:
             raise NotImplementedError
 
         for _ in range(settings.nassert):
-            benchmark.check(self.mk_ast(depth=0))
+            benchmark.check(self.mk_ast(depth=0,vars=benchmark.vars()))
 
         print(benchmark)
         return benchmark
 
-    def mk_ast(self,depth,sort='bool'):
+    def mk_ast(self, depth, vars, sort='bool'):
+        lit = [v for v in self.literals if v.type == sort][0]()
         if depth == settings.depth:
-            return Node()
-        ret = Node(random.choice(self.ops[sort]))
+            return Node(
+                np.random.choice(
+                    p=norm([1,1]),
+                    a=
+                        [
+                            random.choice(),
+                            lit.gen()
+                        ]
+                )
+            )
+        ret = Node(random.choice(self.constructs[sort]))
         for _ in range(ret.val.arity):
             ret.children.append(self.mk_ast(depth+1,ret.val.sig[_]))
 
