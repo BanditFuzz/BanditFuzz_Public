@@ -1,38 +1,20 @@
 #!/usr/bin/env python3
+from banditfuzz import BanditFuzz,warning,die,help_msg
+from banditfuzz.parser import args as settings
+import pdb,sys,traceback
 
-import  banditfuzz.interface.Settings as settings
-from banditfuzz.interface.parseargs import parse
-#from banditfuzz.Solver import *
-from banditfuzz.fuzz import Fuzzer
 def main():
-    settings.SaveAllSolve = False
-    settings.timeout = 5
+    fuzzer = BanditFuzz()
+    fuzzer.loop()
 
-    settings.GeneratorMaxDepth = 3  ##Depth of each asserting AST
-    settings.GeneratorNumConst = 3  ##The num-vars option in stringfuzz
-    settings.NumPrimaries = 4       ##Number of asserting ASTs
-    settings.BanditTrainingMode = True
-
-    settings.db = 'db'
-    
-    ## Full List of ops
-    ## Any subset should work.
-    settings.string_ops = [
-        #'and','or','not','=','
-        'Concat','Contains','Length','IndexOf','IndexOf2','PrefixOf','SuffixOf','Replace','Substring','FromInt','ToInt',
-        #'InRegex','At',
-        'Str2Re','ReConcat','ReStar','RePlus','ReRange','ReUnion','ReInter'
-    ]
-
-
-    ##Database of inputs
-    settings.OutputDirectory = 'db/'
-
-
-    parse()
-
-    fuzzer = Fuzzer()
-    fuzzer.fuzz()
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    try:
+        main()
+        print("Completed evaluation without error.")
+    except:
+        if settings.debug:
+            extype, value, tb = sys.exc_info()
+            traceback.print_exc()
+            pdb.post_mortem(tb)
+        else:
+            die("Failed")
