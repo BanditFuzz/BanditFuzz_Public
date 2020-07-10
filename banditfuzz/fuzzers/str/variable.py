@@ -1,6 +1,7 @@
 from ..variable import Variable
 class StrVariable(Variable):
     def __init__(self,name):
+        self.sort = 'str'
         self.name = name
     def __str__(self):
         return self.name

@@ -168,6 +168,52 @@ parser.add_argument('-real', '--real',
                     help="Generate benchmarks with reals"
 )
 
+parser.add_argument('-8', '--8', 
+                    action='store_true',
+                    dest="_8",
+                    help="Generate benchmarks with width 8"
+)
+
+
+parser.add_argument('-16', '--16', 
+                    action='store_true',
+                    dest="_16",
+                    help="Generate benchmarks with width 16"
+)
+
+parser.add_argument('-32', '--32', 
+                    action='store_true',
+                    dest="_32",
+                    help="Generate benchmarks with width 32"
+)
+
+parser.add_argument('-64', '--64', 
+                    action='store_true',
+                    dest="_64",
+                    help="Generate benchmarks with width 64"
+)
+
+parser.add_argument('-128', '--128', 
+                    action='store_true',
+                    dest="_128",
+                    help="Generate benchmarks with width 128"
+)
+
+parser.add_argument('-256', '--256', 
+                    action='store_true',
+                    dest="_256",
+                    help="Generate benchmarks with width 256"
+)
+
+# parser.add_argument('-randbit', '--random-bit-lengths', 
+#                     action='store_true',
+#                     dest="rand_bit_len",
+#                     help="Generate benchmarks with random bit widths"
+# )
+
+
+
 
 
 args = parser.parse_args()
+if not(args._8 or args._16 or args._32 or args._64 or args._128 or args._256): args._32 = True

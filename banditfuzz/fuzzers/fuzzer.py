@@ -2,7 +2,8 @@ from ..parser import args as settings
 from .node import Node
 from .benchmark import Benchmark
 from sklearn.preprocessing import normalize as norm
-import inspect,pdb
+import inspect,pdb,random
+import numpy as np
 
 class Fuzzer:
     def __init__(self):
@@ -10,7 +11,18 @@ class Fuzzer:
         self.quantifed = False
         self.quantifiers = []
         self.actions = []
-        self.literals = []
+        self.literals = {
+            'bool'  : [],
+            'fp'    : [],
+            'bv'    : [],
+            'int'   : [],
+            'real'  : [],
+            'str'   : [],
+            'reg'   : [],
+            'arr'   : [],
+            'uf'    : [],
+            'round' : [],
+        }
         self.constructs = {
             'bool'  : [],
             'fp'    : [],
@@ -25,10 +37,12 @@ class Fuzzer:
         }
         self._mk_from_settings()
     def _mk_from_settings(self):
-        from . import core.constructs as core_constructs
+        from .core import constructs as core_constructs
         from .core.literal import BoolLiteral
-        self.literals += [BoolLiteral]
-        self.constructs += [o[1] for o in inspect.getmembers(core_constructs) if inspect.isclass(o[1])]
+
+        self.literals['bool'] += [BoolLiteral]
+        for const in [o[1] for o in inspect.getmembers(core_constructs) if inspect.isclass(o[1])]:
+            self.constructs[const().sort].append(const)
         if settings.quantified:
             raise NotImplementedError
             self.quantifed = True
@@ -46,24 +60,31 @@ class Fuzzer:
 
         if settings.strings:
             from .str import constructs as str_const_mod
-            from .str import StrLiteral,RegExLiteral
-            self.literals += [STRLiteral(), RegExLiteral()]
+            from .str.literal import StrLiteral,RegExLiteral
+            self.literals['str'] += [StrLiteral]
+            self.literals['reg'] += [RegExLiteral]
+            if not settings.integer:
+                from .int.literal import IntLiteral
+                self.literals['int']  += [IntLiteral]
+
             self.logic += "S"
             str_constructs = [o[1] for o in inspect.getmembers(str_const_mod) if inspect.isclass(o[1])]
             self.actions += str_constructs
             for const in str_constructs: 
-                self.constructs[const().type].append(const)
+                self.constructs[const().sort].append(const)
 
 
         if settings.fp:
-            from .fp import Literal as FP_Literal
-            from .fp import constructs
-            self.literals += [FP_Literal()]           
+            from .fp.literal import FPLiteral,RoundLiteral
+            from .fp import constructs as fp_constructs_module
+            self.literals['fp']     += [FPLiteral]           
+            self.literals['round']  += [RoundLiteral]
+
             self.logic += 'FP'
-            fp_constructs = [o[1] for o in inspect.getmembers(fp_const_mod) if inspect.isclass(o[1])]
+            fp_constructs = [o[1] for o in inspect.getmembers(fp_constructs_module) if inspect.isclass(o[1])]
             self.actions += fp_constructs
             for const in fp_constructs:
-                self.constructs[const().type].append(const)
+                self.constructs[const().sort].append(const)
 
         if settings.bv:
             raise NotImplementedError
@@ -104,7 +125,7 @@ class Fuzzer:
                 benchmark.add_var(StrVariable(f'str_{_}'))
 
         if settings.fp:
-            from .fp.variable import FPVariable
+            from .fp.variable import FP_Variable as FPVariable
             for _ in range(settings.vars):
                 if   settings._8:   benchmark.add_var(FPVariable(f'fp_{_}',3,5))
                 elif settings._16:  benchmark.add_var(FPVariable(f'fp_{_}',5,11))
@@ -112,12 +133,14 @@ class Fuzzer:
                 elif settings._64:  benchmark.add_var(FPVariable(f'fp_{_}',11,53))
                 elif settings._128: benchmark.add_var(FPVariable(f'fp_{_}',15,113))
                 elif settings._256: benchmark.add_var(FPVariable(f'fp_{_}',19,237))
-                elif settings.rand_bit_len: benchmark.add_var(FPVariable(f'fp_{_}',random.randint(0,256), random.randint(0,256)))
-                else:
-                    benchmark.add_var(np.random.choice(
-                        (FPVariable(f'fp_{_}',3,5), FPVariable(f'fp_{_}',5,11), FPVariable(f'fp_{_}',8,24), FPVariable(f'fp_{_}',11,53), FPVariable(f'fp_{_}',15,113), FPVariable(f'fp_{_}',19,237), FPVariable(f'fp_{_}',random.randint(2,256), random.randint(2,256))),
-                        p=(0.14285,                    0.14285,                    0.14285,                    0.14285,                     0.14285,                      0.14285,                      0.14285)
-                    ))
+                # elif settings.rand_bit_len: benchmark.add_var(FPVariable(f'fp_{_}',random.randint(0,256), random.randint(0,256)))
+                # else:
+                #     opts =  (FPVariable(f'fp_{_}',3,5), FPVariable(f'fp_{_}',5,11), FPVariable(f'fp_{_}',8,24), FPVariable(f'fp_{_}',11,53), FPVariable(f'fp_{_}',15,113), FPVariable(f'fp_{_}',19,237), FPVariable(f'fp_{_}',random.randint(2,256), random.randint(2,256)))
+                #     odds =  (1,                         1,                          1,                          1,                           1,                            1,                            1)
+                #     benchmark.add_var(np.random.choice(
+                #         a = opts,
+                #         p = odds/np.linalg.norm(odds)**2,
+                #     ))
 
         if settings.bv:
             raise NotImplementedError
@@ -131,27 +154,27 @@ class Fuzzer:
             raise NotImplementedError
 
         for _ in range(settings.nassert):
-            benchmark.check(self.mk_ast(depth=0,vars=benchmark.vars()))
+            benchmark.check(self.mk_ast(depth=0,benchmark=benchmark))
 
         print(benchmark)
         return benchmark
 
-    def mk_ast(self, depth, vars, sort='bool'):
-        lit = [v for v in self.literals if v.type == sort][0]()
+    def mk_ast(self, depth, benchmark, sort='bool'):
         if depth == settings.depth:
+            if sort == 'round' or sort == 'reg':
+                return random.choice(self.literals[sort])()
+            opts =  [random.choice(benchmark.vars(sort=sort)),    random.choice(self.literals[sort])()]
+            odds =  [1,                                           1]
             return Node(
                 np.random.choice(
-                    p=norm([1,1]),
-                    a=
-                        [
-                            random.choice(),
-                            lit.gen()
-                        ]
+                    p= odds/np.linalg.norm(odds)**2,
+                    a= opts,
                 )
             )
-        ret = Node(random.choice(self.constructs[sort]))
+        ret = Node(random.choice(self.constructs[sort])())
         for _ in range(ret.val.arity):
-            ret.children.append(self.mk_ast(depth+1,ret.val.sig[_]))
+            ret.children.append(self.mk_ast(depth=depth+1, benchmark=benchmark, sort=ret.val.sig[_]))
+        return ret
 
     def mutate(self, construct):
         pass

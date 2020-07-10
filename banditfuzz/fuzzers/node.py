@@ -4,8 +4,8 @@ class Node:          ##AST node class,
         self.children = []          #list of child nodes, [] if leaf
 
     def __str__(self):
-        if len(children) == 0: return str(val)
-        ret = '(' + str(val) + ' ' 
+        if len(self.children) == 0: return str(self.val)
+        ret = '(' + str(self.val) + ' ' 
         for child in self.children:
             ret += str(child) + ' '
         return ret[:-1] + ')'

@@ -157,7 +157,7 @@ class LT:
 class GEQ:
     def __init__(self):
         self.arity = 2
-        self.sort = 'fp'
+        self.sort = 'bool'
         self.sig = [
             'fp', 'fp',
             'bool'
@@ -170,7 +170,7 @@ class GEQ:
 class GT:
     def __init__(self):
         self.arity = 2
-        self.sort = 'fp'
+        self.sort = 'bool'
         self.sig = [
             'fp', 'fp',
             'bool'

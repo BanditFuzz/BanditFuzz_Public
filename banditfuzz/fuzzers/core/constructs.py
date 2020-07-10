@@ -16,7 +16,7 @@ class IMPL:
         self.arity = 2
         self.sort = 'bool'
         self.sig = [
-            'bool', 'bool'
+            'bool', 'bool',
             'bool'
         ]
         self.chainable = True
@@ -29,7 +29,7 @@ class AND:
         self.arity = 2
         self.sort = 'bool'
         self.sig = [
-            'bool', 'bool'
+            'bool', 'bool',
             'bool'
         ]
         self.chainable = True
@@ -42,7 +42,7 @@ class OR:
         self.arity = 2
         self.sort = 'bool'
         self.sig = [
-            'bool', 'bool'
+            'bool', 'bool',
             'bool'
         ]
         self.chainable = True
@@ -55,7 +55,7 @@ class XOR:
         self.arity = 2
         self.sort = 'bool'
         self.sig = [
-            'bool', 'bool'
+            'bool', 'bool',
             'bool'
         ]
         self.chainable = True

@@ -4,12 +4,18 @@ class Benchmark:                ##return type of fuzzer.gen, fuzzer.mutate
     def __init__(self, logic):
         self.logic = logic       # i.e, (set-logic LOGIC)
         self.assertions = []    # List of asserting ASTNodes1
-        self._vars = []
+        self._vars = {}
 
-    def vars(self): return self._vars
+    def vars(self,sort=None): 
+        if sort: return self._vars[sort]
+        else:
+            ret = []
+            for sort in self._vars: ret += self._vars[sort]
+            return ret
 
     def add_var(self,var):
-        self._vars.append(var)
+        if var.sort not in self._vars: self._vars[var.sort] = [] 
+        self._vars[var.sort].append(var)
 
     def check(self, node):
         assert isinstance(node,Node)
@@ -21,7 +27,7 @@ class Benchmark:                ##return type of fuzzer.gen, fuzzer.mutate
         ret += '(set-info :Author "Joseph Scott, Fed Mora, Vijay Ganesh" )\n'
         ret += '(set-info :Contact "Joseph Scott, joseph.scott@uwaterloo.ca")\n'
         ret += f'(set-logic {self.logic})\n'
-        for var in self._vars:
+        for var in self.vars():
             ret += var.declare() + '\n'
         for ast in self.assertions:
             ret += f'(assert {ast})\n'
