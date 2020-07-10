@@ -15,7 +15,7 @@ class BanditFuzz:
 
 		self.fuzzer = Fuzzer()
 		self.fuzzer.gen()
-		pdb.set_trace()
+		# pdb.set_trace()
 		# if settings.theory == 'QF_FP':
 		# 	self.mutator = Thompson(self.gen.ops + self.gen.boolean_ops + self.gen.rounding_modes)
 		# else:
