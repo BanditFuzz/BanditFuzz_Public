@@ -10,7 +10,7 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-        print("Completed evaluation without error.")
+        if settings.debug: print("Completed evaluation without error.")
     except:
         if settings.debug:
             extype, value, tb = sys.exc_info()

@@ -69,7 +69,7 @@ parser.add_argument("-debug",
             metavar="debug",
             action="store",
             dest="debug",
-            default=True,
+            default=False,
             type=bool,
             help="Run in debug mode"
 )

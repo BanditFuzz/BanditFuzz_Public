@@ -13,6 +13,7 @@ setup(
     url          = 'https://github.com/j29scott/BanditFuzz',
     scripts      = [
         'bin/banditfuzz',
+        'bin/smtfuzz',
         # 'bin/banditfuzz_eval',
         # 'bin/banditfuzz_train',
         # 'bin/banditfuzz_rt_rngfuzz',
