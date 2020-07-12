@@ -11,6 +11,15 @@ parser.add_argument("-t", "--target-solvers",
                 help="The target SMT Solvers in the banditfuzz loop."
 )
 
+parser.add_argument("-ban", "--banned-constructs",
+                metavar="ban[,ban...]",
+                action="store",
+                dest="ban",
+                default=None,
+                nargs='+',
+                help="The target SMT Solvers in the banditfuzz loop."
+)
+
 parser.add_argument("-r", "--reference-solvers",
                 metavar="reference_solvers[,reference_solvers...]",
                 action="store",
@@ -66,11 +75,8 @@ parser.add_argument("-v", "-vars",
 )
 
 parser.add_argument("-debug",
-            metavar="debug",
-            action="store",
+            action='store_true',
             dest="debug",
-            default=False,
-            type=bool,
             help="Run in debug mode"
 )
 

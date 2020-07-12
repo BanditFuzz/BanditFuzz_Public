@@ -181,18 +181,20 @@ class SUBSTR:
     def __str__(self):
         return "str.substr"
     __repr__ = __str__
+
 class PREFIXOF:
     def __init__(self):
-        self.arity = 3
+        self.arity = 2
         self.sort = 'bool'
         self.sig = [
-            'str', 'int', 'int',
-            'str'
+            'str', 'str',
+            'bool'
         ]
         self.chainable = False
     def __str__(self):
-        return "str.substr"
+        return "str.prefixof"
     __repr__ = __str__
+    
 class SUFFIXOF:
     def __init__(self):
         self.arity = 2

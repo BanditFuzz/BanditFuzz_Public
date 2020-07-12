@@ -103,6 +103,15 @@ class Fuzzer:
 
         if settings.real:
             raise NotImplementedError
+
+
+        for sort in self.constructs:
+            rm = []
+            for op in self.constructs[sort]:
+                if str(op()) in settings.ban:
+                    rm.append(op)
+            for op in rm:
+                pdb.set_trace()
         
 
     def gen(self):
