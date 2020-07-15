@@ -194,7 +194,7 @@ class PREFIXOF:
     def __str__(self):
         return "str.prefixof"
     __repr__ = __str__
-    
+
 class SUFFIXOF:
     def __init__(self):
         self.arity = 2

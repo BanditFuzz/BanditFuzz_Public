@@ -5,7 +5,7 @@ import pdb,sys,traceback
 
 def main():
     fuzzer = BanditFuzz()
-    # fuzzer.loop()
+    fuzzer.fuzz()
 
 if __name__ == "__main__":
     try:

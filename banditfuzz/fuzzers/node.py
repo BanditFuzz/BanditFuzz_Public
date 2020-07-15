@@ -1,6 +1,7 @@
 class Node:          ##AST node class,
     def __init__(self,val):
         self.val = val             #A construct
+        self.sort = val.sort
         self.children = []          #list of child nodes, [] if leaf
 
     def __str__(self):

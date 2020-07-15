@@ -4,17 +4,18 @@ from banditfuzz.parser import args as settings
 import pdb,sys,traceback
 
 def main():
-    fuzzer = BanditFuzz()
+    bfuzz = BanditFuzz()
+    print(bfuzz.fuzzer.gen())
     # fuzzer.loop()
 
 if __name__ == "__main__":
     try:
         main()
         if settings.debug: print("Completed evaluation without error.")
-    except:
+    except Exception as e:
         if settings.debug:
             extype, value, tb = sys.exc_info()
             traceback.print_exc()
             pdb.post_mortem(tb)
         else:
-            die("Failed")
+            die("Internal failure: " + str(e))

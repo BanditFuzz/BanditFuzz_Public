@@ -6,7 +6,7 @@ parser.add_argument("-t", "--target-solvers",
                 metavar="target_solvers[,target_solvers...]",
                 action="store",
                 dest="target_solvers",
-                default=None,
+                default=[],
                 nargs='+',
                 help="The target SMT Solvers in the banditfuzz loop."
 )
@@ -15,7 +15,7 @@ parser.add_argument("-ban", "--banned-constructs",
                 metavar="ban[,ban...]",
                 action="store",
                 dest="ban",
-                default=None,
+                default=[],
                 nargs='+',
                 help="The target SMT Solvers in the banditfuzz loop."
 )
@@ -24,7 +24,7 @@ parser.add_argument("-r", "--reference-solvers",
                 metavar="reference_solvers[,reference_solvers...]",
                 action="store",
                 dest="reference_solvers",
-                default=None,
+                default=[],
                 nargs='+',
                 help="The reference SMT Solvers in the banditfuzz loop."
 )
@@ -60,7 +60,7 @@ parser.add_argument("-d", "-depth",
             metavar="depth",
             action="store",
             dest="depth",
-            default=5,
+            default=3,
             type=int,
             help="depth of each asserting AST"
 )

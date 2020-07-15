@@ -1,0 +1,1 @@
+smtfuzz -str -ban str.is_digit str.from_code str.to_code str.to_int str.from_int str.replace_all re.comp re.none str.replace_re_all str.replace_re str.in_re 

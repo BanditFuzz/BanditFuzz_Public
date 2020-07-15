@@ -33,6 +33,7 @@ class FPLiteral:
 
 class RoundLiteral:
     def __init__(self):
+        self.sort = 'round'
         self.val = random.choice(['RNE', 'RNA', 'RTP', 'RTN', 'RTZ'])
     def __str__(self):
         return self.val

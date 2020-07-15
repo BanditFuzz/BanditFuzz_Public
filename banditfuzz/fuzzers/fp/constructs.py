@@ -94,7 +94,7 @@ class R2I:
         self.arity = 2
         self.sort = 'fp'
         self.sig = [
-            'fp', 'round',
+            'round', 'fp', 
             'fp'
         ]
         self.chainable = False
