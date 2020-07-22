@@ -203,10 +203,10 @@ class Fuzzer:
 
         def get_node(node,indx,depth=0,cur_indx=0):
             if node.sort == construct_sort:
-                if indx == cur_indx: return node,depth
+                if indx == cur_indx: return node,cur_indx
                 else: cur_indx += 1
             for child in node.children:
-                ret,cur_indx = get_node(child,sort,indx,depth=depth+1,cur_indx=cur_indx)
+                ret,cur_indx = get_node(child,indx,depth=depth+1,cur_indx=cur_indx)
                 if ret != None: return ret,cur_indx
             return None,cur_indx
 
@@ -227,8 +227,9 @@ class Fuzzer:
 
         cur_indx = 0
         for assertion in return_benchmark.assertions:
-            node,cur_indx = get_node(assertion,construct_sort,indx,depth=0,cur_indx=cur_indx)
+            node,cur_indx = get_node(assertion,indx,depth=0,cur_indx=0)
             if node != None: break
+        assert node != None
         sorted_children = {}
         children_its    = {}
         for child in node.children:
