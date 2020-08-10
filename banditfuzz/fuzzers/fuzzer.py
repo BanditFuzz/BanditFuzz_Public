@@ -88,7 +88,15 @@ class Fuzzer:
                 self.constructs[const().sort].append(const)
 
         if settings.bv:
-            raise NotImplementedError
+            from .bv.literal import BVLiteral
+            from .bv import constructs as bv_constructs
+            self.literals['bv']     += [BVLiteral]           
+
+            self.logic += 'BV'
+            bv_constructs = [o[1] for o in inspect.getmembers(bv_constructs) if inspect.isclass(o[1])]
+            self.actions += bv_constructs
+            for const in bv_constructs:
+                self.constructs[const().sort].append(const)
 
         if settings.diff:
             raise NotImplementedError
@@ -144,18 +152,17 @@ class Fuzzer:
                 elif settings._32:  benchmark.add_var(FPVariable(f'fp_{_}',8,24))
                 elif settings._64:  benchmark.add_var(FPVariable(f'fp_{_}',11,53))
                 elif settings._128: benchmark.add_var(FPVariable(f'fp_{_}',15,113))
-                elif settings._256: benchmark.add_var(FPVariable(f'fp_{_}',19,237))
-                # elif settings.rand_bit_len: benchmark.add_var(FPVariable(f'fp_{_}',random.randint(0,256), random.randint(0,256)))
-                # else:
-                #     opts =  (FPVariable(f'fp_{_}',3,5), FPVariable(f'fp_{_}',5,11), FPVariable(f'fp_{_}',8,24), FPVariable(f'fp_{_}',11,53), FPVariable(f'fp_{_}',15,113), FPVariable(f'fp_{_}',19,237), FPVariable(f'fp_{_}',random.randint(2,256), random.randint(2,256)))
-                #     odds =  (1,                         1,                          1,                          1,                           1,                            1,                            1)
-                #     benchmark.add_var(np.random.choice(
-                #         a = opts,
-                #         p = odds/np.linalg.norm(odds)**2,
-                #     ))
+                elif settings._256: benchmark.add_var(FPVariable(f'fp_{_}',19,237))                
 
         if settings.bv:
-            raise NotImplementedError
+            from .bv.variable import BV_Variable
+            for _ in range(settings.vars):
+                if   settings._8:   benchmark.add_var(BV_Variable(f'bv_{_}', size=8))
+                elif settings._16:  benchmark.add_var(BV_Variable(f'bv_{_}', size=16))
+                elif settings._32:  benchmark.add_var(BV_Variable(f'bv_{_}', size=32))
+                elif settings._64:  benchmark.add_var(BV_Variable(f'bv_{_}', size=64))
+                elif settings._128: benchmark.add_var(BV_Variable(f'bv_{_}', size=128))
+                elif settings._256: benchmark.add_var(BV_Variable(f'bv_{_}', size=256))
 
         if settings.integer or settings.strings:
             from .int.variable import IntVariable
@@ -200,7 +207,6 @@ class Fuzzer:
             total += inorder_ast_counter(assertion, construct_sort)
         if total == 0: return None
         indx =  np.random.randint(0,total)
-
         def get_node(node,indx,depth=0,cur_indx=0):
             if node.sort == construct_sort:
                 if indx == cur_indx: return node,cur_indx
@@ -209,7 +215,6 @@ class Fuzzer:
                 ret,cur_indx = get_node(child,indx,depth=depth+1,cur_indx=cur_indx)
                 if ret != None: return ret,cur_indx
             return None,cur_indx
-
 
         def set_node(node,new_node,indx,depth=0,cur_indx=0):
             if node.sort == construct_sort:
@@ -227,7 +232,7 @@ class Fuzzer:
 
         cur_indx = 0
         for assertion in return_benchmark.assertions:
-            node,cur_indx = get_node(assertion,indx,depth=0,cur_indx=0)
+            node, cur_indx = get_node(assertion,indx,depth=0,cur_indx=0)
             if node != None: break
         assert node != None
         sorted_children = {}

@@ -1,5 +1,5 @@
 import numpy as np
-import sys,os,pdb,glob,random,time
+import sys,os,pdb,glob,random,time, uuid
 from .fuzzers import Fuzzer	
 from .parser import args as settings
 from .agents import ThompsonSampling
@@ -14,24 +14,28 @@ class BanditFuzz:
 		self.best_benchmark = None
 		self.max_iter = 10 ** 3
 
+		self.loc = f"{settings.db}/{uuid.uuid4().int}"
+		os.makedirs(self.loc, exist_ok=True) 
+
 	def run_solvers(self,benchmark):
 		for solver in settings.reference_solvers:
 			ans, time, output = run_solver(solver,benchmark,settings.timeout)
-
-
-		
+			benchmark.add_data(solver=solver,time=time, answer=ans)
+			with open('tmp.smt2', 'w') as f:
+				f.write(str(benchmark))
+		with open(f"{self.loc}/{benchmark.id}.smt2", 'w') as f:
+			f.write(str(benchmark))
 
 	def fuzz(self):
 		self.best_benchmark = self.fuzzer.gen()
 		self.run_solvers(self.best_benchmark)
 		for it in range(1,self.max_iter):
-			rand_gen = it % 5 == 0
+			rand_gen = True
 			if rand_gen:
 				new_benchmark = self.fuzzer.gen()
+				self.run_solvers(new_benchmark)
 			else:
 				new_benchmark = self.fuzzer.mutate(
 					benchmark=self.best_benchmark,
 					construct=self.actions[self.agent.select_action()]
 				)
-
-

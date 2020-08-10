@@ -22,7 +22,7 @@ class FPLiteral:
         self.val += ' '
 
         self.val += '#b'
-        for _ in range(sb): self.val += rng()
+        for _ in range(sb-1): self.val += rng()
 
         self.val += ')'
 
