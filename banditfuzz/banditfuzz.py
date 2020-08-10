@@ -4,6 +4,7 @@ from .fuzzers import Fuzzer
 from .parser import args as settings
 from .agents import ThompsonSampling
 from .solvers import run_solver
+from .util import coverage_json_parser
 
 class BanditFuzz:
 	def __init__(self):
@@ -37,3 +38,25 @@ class BanditFuzz:
 					benchmark=self.best_benchmark,
 					construct=self.actions[self.agent.select_action()]
 				)
+
+	def fuzz_coverage(self):
+		self.best_benchmark = self.fuzzer.gen()
+		self.run_solvers(self.best_benchmark)
+		jsonParser = coverage_json_parser.jsonParser()
+		coverage = jsonParser.baseLineCoverage
+		self.runs = []
+		self.runs.append([self.best_benchmark, coverage])
+
+		for i in range(1, self.max_iter):
+			#if i < 10:
+			new_benchmark = self.fuzzer.gen()#self.fuzzer.mutate(benchmark=self.best_benchmark, construct=self.actions[self.agent.select_action()])
+			self.run_solvers(new_benchmark)
+			newCoverage = jsonParser.getNewCoverage()
+			if newCoverage[0]:
+				self.runs.append([new_benchmark, newCoverage[1]])
+		dir_cov = settings.db + "/cov"
+		for i in range(len(self.runs)):
+			file = open("file_"+i,"a")
+			file.write(self.runs[i][0])
+			file.write("\nCoverage: " + self.runs[i][1])
+			file.close()
