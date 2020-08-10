@@ -21,8 +21,6 @@ class BanditFuzz:
 		for solver in settings.reference_solvers:
 			ans, time, output = run_solver(solver,benchmark,settings.timeout)
 			benchmark.add_data(solver=solver,time=time, answer=ans)
-			with open('tmp.smt2', 'w') as f:
-				f.write(str(benchmark))
 		with open(f"{self.loc}/{benchmark.id}.smt2", 'w') as f:
 			f.write(str(benchmark))
 
