@@ -100,10 +100,26 @@ class Fuzzer:
             raise NotImplementedError
 
         if settings.integer:
-            raise NotImplementedError
+            from .int.literal import IntLiteral
+            from .int import constructs as Int_constructs_module
+            self.literals['int'] += [IntLiteral]
+
+            self.logic += 'int'
+            int_constructs = [o[1] for o in inspect.getmembers(Int_constructs_module) if inspect.isclass(o[1])]
+            self.actions += int_constructs
+            for const in int_constructs:
+                self.constructs[const().sort].append(const)
 
         if settings.real:
-            raise NotImplementedError
+            from .real.literal import RealLiteral
+            from .real import constructs as Real_constructs_module
+            self.literals['real'] += [RealLiteral]
+
+            self.logic += 'real'
+            real_constructs = [o[1] for o in inspect.getmembers(Real_constructs_module) if inspect.isclass(o[1])]
+            self.actions += real_constructs
+            for const in real_constructs:
+                self.constructs[const().sort].append(const)
 
 
         for ban_op in settings.ban:
