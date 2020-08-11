@@ -211,6 +211,11 @@ parser.add_argument('-256', '--256',
                     help="Generate benchmarks with width 256"
 )
 
+parser.add_argument('-cov',
+                    action='store_true',
+                    dest="cov",
+                    help="Run Banditfuzz with coverage. Requires target to be compiled with coverage flags")
+
 # parser.add_argument('-randbit', '--random-bit-lengths', 
 #                     action='store_true',
 #                     dest="rand_bit_len",

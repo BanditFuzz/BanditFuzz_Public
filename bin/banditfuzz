@@ -5,7 +5,10 @@ import pdb,sys,traceback
 
 def main():
     fuzzer = BanditFuzz()
-    fuzzer.fuzz()
+    if settings.cov:
+        fuzzer.fuzz_coverage()
+    else:
+        fuzzer.fuzz()
 
 if __name__ == "__main__":
     try:
