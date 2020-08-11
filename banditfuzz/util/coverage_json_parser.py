@@ -1,20 +1,31 @@
 import json
+from .parser import args as settings
+import os
 
 class jsonParser:
     def __init__(self, json_file="coverage.json"):
         self.json_file = json_file
         self.getBaseJsonMap()
         self.baseLineCoverage = self.getBaseLineCoverage()
+        self.json_map = []
+
 
     def getBaseJsonMap(self):
-        with open(self.json_file) as file:
-            self.json_map = json.load(file)
-        file.close()
+        for solver in settings.target_solvers:
+            cmd = f"gcovr -r {solver} --json -o util/{self.json_file}"
+            os.system(cmd)
+            with open(self.json_file) as file:
+                self.json_map.append(json.load(file))
+            file.close()
 
     def getNewJsonMap(self):
-        with open(self.json_file) as file:
-            self.new_json_map = json.load(file)
-        file.close()
+        self.new_json_map = []
+        for solver in settings.target_solvers:
+            cmd = f"gcovr -r {solver} --json -o util/{self.json_file}"
+            os.system(cmd)
+            with open(self.json_file) as file:
+                    self.new_json_map.appened(json.load(file))
+                file.close()
 
     def getBaseLineCoverage(self):
         total_branches_visited = 0
