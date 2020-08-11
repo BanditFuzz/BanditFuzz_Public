@@ -52,15 +52,17 @@ class BanditFuzz:
 			#if i < 10:
 			new_benchmark = self.fuzzer.gen()#self.fuzzer.mutate(benchmark=self.best_benchmark, construct=self.actions[self.agent.select_action()])
 			self.run_solvers(new_benchmark)
-			newCoverage = jsonParser.getNewCoverage()
-			if newCoverage[0]:
-				self.runs.append([new_benchmark, newCoverage[1]])
-			if newCoverage[1] > best_coverage:
-				best_coverage = newCoverage[1]
+			newCoverage = jsonParser.getBaseLineCoverage()
+			self.runs.append([new_benchmark, newCoverage])
+			for i in range(len(best_coverage)):
+				if newCoverage[i] > best_coverage[i]:
+					best_coverage[i] = newCoverage[i]
+
 		'''dir_cov = settings.db + "/cov"
 		for i in range(len(self.runs)):
 			file = open("file_"+i,"a")
 			file.write(self.runs[i][0])
 			file.write("\nCoverage: " + self.runs[i][1])
 			file.close()'''
-		print("Best coverage is {}".format(best_coverage))
+		for i in range(len(best_coverage)):
+			print(f"Best coverage for solver {i} is {best_coverage[i]}.\n")

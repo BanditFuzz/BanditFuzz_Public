@@ -24,14 +24,13 @@ class jsonParser:
             cmd = f"gcovr -r {solver} --json -o util/{self.json_file}"
             os.system(cmd)
             with open(self.json_file) as file:
-                    self.new_json_map.appened(json.load(file))
+                self.new_json_map.append(json.load(file))
                 file.close()
 
     def getBaseLineCoverage(self):
-        total_branches_visited = 0
-        total_branch_count = 0
+        self.coverageData = []
 
-        for a in range(len(self.json_map["files"])):
+        ''' for a in range(len(self.json_map["files"])):
             for b in range(len(self.json_map["files"][a]["lines"])):
                 for c in range(len(self.json_map["files"][a]["lines"][b]["branches"])):
                     if self.json_map["files"][a]["lines"][b]["branches"][c]["count"] > 0:
@@ -39,15 +38,23 @@ class jsonParser:
                         self.json_map["files"][a]["lines"][b]["branches"][c]["visited"] = True
                     else:
                         self.json_map["files"][a]["lines"][b]["branches"][c]["visited"] = False
-                    total_branch_count += 1
+                    total_branch_count += 1'''
 
-        self.total_branch_count = total_branch_count
-        self.unique_branches = total_branches_visited
+        for i in range(len(settings.target_solvers)):
+            total_branches_visited = 0
+            total_branch_count = 0
+            for file in self.json_map[i]["files"]:
+                for line in file["lines"]:
+                    for branch in line["branches"]:
+                        if branch["count"] > 0:
+                            total_branches_visited += 1
+                        total_branch_count += 1
+            self.coverageData.append((i, float(total_branches_visited)/float(total_branch_count)*100))
 
 
-        return (float(total_branches_visited) / float(total_branch_count)) * 100.0
+        #return (float(total_branches_visited) / float(total_branch_count)) * 100.0
 
-    def getNewCoverage(self):
+    def getNewCoverage(self): #might not be necessary
         self.getNewJsonMap()
         increase = False
         for a in range(len(self.new_json_map["files"])):
