@@ -46,6 +46,7 @@ class BanditFuzz:
 		coverage = jsonParser.baseLineCoverage
 		self.runs = []
 		self.runs.append([self.best_benchmark, coverage])
+		best_coverage = coverage
 
 		for i in range(1, self.max_iter):
 			#if i < 10:
@@ -54,9 +55,12 @@ class BanditFuzz:
 			newCoverage = jsonParser.getNewCoverage()
 			if newCoverage[0]:
 				self.runs.append([new_benchmark, newCoverage[1]])
-		dir_cov = settings.db + "/cov"
+			if newCoverage[1] > best_coverage:
+				best_coverage = newCoverage[1]
+		'''dir_cov = settings.db + "/cov"
 		for i in range(len(self.runs)):
 			file = open("file_"+i,"a")
 			file.write(self.runs[i][0])
 			file.write("\nCoverage: " + self.runs[i][1])
-			file.close()
+			file.close()'''
+		print("Best coverage is {}".format(best_coverage))

@@ -19,20 +19,20 @@ fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $DIR
 
-if ! [ -x "$(command -v python3)" ]; then
-  echo 'Error: python3 is not installed.'
-  exit 1
-fi
+#if ! [ -x "$(command -v python3)" ]; then
+#  echo 'Error: python3 is not installed.'
+#  exit 1
+#fi
 
-if ! [ -x "$(command -v pip3)" ]; then
-  echo 'Error: pip3 is not installed.'
-  exit 1
-fi
+#if ! [ -x "$(command -v pip3)" ]; then
+#  echo 'Error: pip3 is not installed.'
+#  exit 1
+#fi
 
-if ! [ -x "$(command -v virtualenv)" ]; then
-  echo 'Error: pip3 is not installed.'
-  exit 1
-fi
+#if ! [ -x "$(command -v virtualenv)" ]; then
+#  echo 'Error: pip3 is not installed.'
+#  exit 1
+#fi
 
 virtualenv -p python3 venv
 source venv/bin/activate
@@ -40,6 +40,7 @@ source venv/bin/activate
 ## Install Banditfuzz
 python3 setup.py develop
 pip3 install numpy
+pip3 install sklearn
 
 # Install Stringfuzz within banditfuzz.
 cd banditfuzz
