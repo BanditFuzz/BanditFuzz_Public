@@ -1,34 +1,40 @@
 import json
-from .parser import args as settings
+from ..parser import args as settings
 import os
+import pathlib
 
 class jsonParser:
     def __init__(self, json_file="coverage.json"):
         self.json_file = json_file
+        self.json_map = []
         self.getBaseJsonMap()
         self.baseLineCoverage = self.getBaseLineCoverage()
-        self.json_map = []
+
 
 
     def getBaseJsonMap(self):
         for solver in settings.target_solvers:
-            cmd = f"gcovr -r {solver} --json -o util/{self.json_file}"
+            solver_dir = pathlib.Path(solver).parent
+            json_path = solver_dir.as_posix() + "/" + self.json_file
+            cmd = f"gcovr -r {solver_dir} --json -o {json_path}"
             os.system(cmd)
-            with open(self.json_file) as file:
+            with open(json_path) as file:
                 self.json_map.append(json.load(file))
             file.close()
 
     def getNewJsonMap(self):
         self.new_json_map = []
         for solver in settings.target_solvers:
-            cmd = f"gcovr -r {solver} --json -o util/{self.json_file}"
+            solver_dir = pathlib.Path(solver).parent
+            json_path = solver_dir.as_posix() + "/" + self.json_file
+            cmd = f"gcovr -r {solver_dir} --json -o {self.json_path}"
             os.system(cmd)
-            with open(self.json_file) as file:
+            with open(json_path) as file:
                 self.new_json_map.append(json.load(file))
                 file.close()
 
     def getBaseLineCoverage(self):
-        self.coverageData = []
+        coverageData = []
 
         ''' for a in range(len(self.json_map["files"])):
             for b in range(len(self.json_map["files"][a]["lines"])):
@@ -49,10 +55,10 @@ class jsonParser:
                         if branch["count"] > 0:
                             total_branches_visited += 1
                         total_branch_count += 1
-            self.coverageData.append((i, float(total_branches_visited)/float(total_branch_count)*100))
+            coverageData.append((i, float(total_branches_visited)/float(total_branch_count)*100))
 
 
-        #return (float(total_branches_visited) / float(total_branch_count)) * 100.0
+        return coverageData
 
     def getNewCoverage(self): #might not be necessary
         self.getNewJsonMap()

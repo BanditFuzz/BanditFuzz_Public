@@ -65,4 +65,4 @@ class BanditFuzz:
 			file.write("\nCoverage: " + self.runs[i][1])
 			file.close()'''
 		for i in range(len(best_coverage)):
-			print(f"Best coverage for solver {i} is {best_coverage[i]}.\n")
+			print(f"Best coverage for solver {i} is {best_coverage[i][1]}.\n")

@@ -41,6 +41,7 @@ source venv/bin/activate
 python3 setup.py develop
 pip3 install numpy
 pip3 install sklearn
+pip3 install gcovr
 
 # Install Stringfuzz within banditfuzz.
 cd banditfuzz
