@@ -13,7 +13,7 @@ class BanditFuzz:
 		for sort in self.fuzzer.constructs: self.actions += self.fuzzer.constructs[sort]
 		self.agent  = ThompsonSampling(n_actions=len(self.actions))
 		self.best_benchmark = None
-		self.max_iter = 10 ** 3
+		self.max_iter = 504#10 ** 3
 
 		self.loc = f"{settings.db}/{uuid.uuid4().int}"
 		os.makedirs(self.loc, exist_ok=True) 

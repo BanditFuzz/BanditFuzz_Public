@@ -2,6 +2,7 @@ import json
 from ..parser import args as settings
 import os
 import pathlib
+import pdb
 
 class jsonParser:
     def __init__(self, json_file="coverage.json"):
@@ -25,7 +26,7 @@ class jsonParser:
     def getNewJsonMap(self):
         self.new_json_map = []
         for solver in settings.target_solvers:
-            solver_dir = pathlib.Path(solver).parent
+            solver_dir = pathlib.Path(solver).parent.parent;             pdb.set_trace()
             json_path = solver_dir.as_posix() + "/" + self.json_file
             cmd = f"gcovr -r {solver_dir} --json -o {self.json_path}"
             os.system(cmd)
