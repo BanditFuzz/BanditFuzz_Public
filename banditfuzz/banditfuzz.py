@@ -13,7 +13,7 @@ class BanditFuzz:
 		for sort in self.fuzzer.constructs: self.actions += self.fuzzer.constructs[sort]
 		self.agent  = ThompsonSampling(n_actions=len(self.actions))
 		self.best_benchmark = None
-		self.max_iter = 504#10 ** 3
+		self.max_iter = 10 ** 3
 
 		self.loc = f"{settings.db}/{uuid.uuid4().int}"
 		os.makedirs(self.loc, exist_ok=True) 
@@ -47,6 +47,7 @@ class BanditFuzz:
 		self.runs = []
 		self.runs.append([self.best_benchmark, coverage])
 		best_coverage = coverage
+		best_benchmark = [self.best_benchmark for i in range(len(best_coverage))]
 
 		for i in range(1, self.max_iter):
 			#if i < 10:
@@ -55,8 +56,9 @@ class BanditFuzz:
 			newCoverage = jsonParser.getBaseLineCoverage()
 			self.runs.append([new_benchmark, newCoverage])
 			for i in range(len(best_coverage)):
-				if newCoverage[i] > best_coverage[i]:
+				if newCoverage[i][1] > best_coverage[i][1]:
 					best_coverage[i] = newCoverage[i]
+					best_benchmark[i] = new_benchmark
 
 		'''dir_cov = settings.db + "/cov"
 		for i in range(len(self.runs)):
@@ -66,3 +68,9 @@ class BanditFuzz:
 			file.close()'''
 		for i in range(len(best_coverage)):
 			print(f"Best coverage for solver {i} is {best_coverage[i][1]}.\n")
+			print(f"Total branch count is {best_coverage[i][2]}")
+
+		for i in range(len(best_benchmark)):
+			with open(f"bestBenchmark{i}.smt2", "w") as file:
+				file.write(str(best_benchmark[i]))
+				file.close()

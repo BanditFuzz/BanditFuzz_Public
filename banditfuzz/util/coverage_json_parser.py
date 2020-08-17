@@ -15,7 +15,7 @@ class jsonParser:
 
     def getBaseJsonMap(self):
         for solver in settings.target_solvers:
-            solver_dir = pathlib.Path(solver).parent
+            solver_dir = pathlib.Path(solver).parent.parent
             json_path = solver_dir.as_posix() + "/" + self.json_file
             cmd = f"gcovr -r {solver_dir} --json -o {json_path}"
             os.system(cmd)
@@ -26,9 +26,10 @@ class jsonParser:
     def getNewJsonMap(self):
         self.new_json_map = []
         for solver in settings.target_solvers:
-            solver_dir = pathlib.Path(solver).parent.parent;             pdb.set_trace()
+            solver_dir = pathlib.Path(solver).parent.parent
+            print(f"{solver_dir.as_posix()}\n")
             json_path = solver_dir.as_posix() + "/" + self.json_file
-            cmd = f"gcovr -r {solver_dir} --json -o {self.json_path}"
+            cmd = f"gcovr -r {solver_dir} --json -o {json_path}"
             os.system(cmd)
             with open(json_path) as file:
                 self.new_json_map.append(json.load(file))
@@ -56,7 +57,7 @@ class jsonParser:
                         if branch["count"] > 0:
                             total_branches_visited += 1
                         total_branch_count += 1
-            coverageData.append((i, float(total_branches_visited)/float(total_branch_count)*100))
+            coverageData.append([i, float(total_branches_visited)/float(total_branch_count)*100,total_branch_count])
 
 
         return coverageData
