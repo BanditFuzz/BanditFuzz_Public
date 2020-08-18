@@ -4,5 +4,6 @@ class IntLiteral:
         self.sort = 'int'
         self.val = random.randint(-10**9, 10**9)
     def __str__(self):
-        return f'{self.val}'
+        if self.val >= 0: return f'{self.val}'
+        else: return f'(- {-self.val})'
     __repr__ = __str__

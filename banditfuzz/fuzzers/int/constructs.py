@@ -91,19 +91,19 @@ class MOD:
 
     __repr__ = __str__
 
-class REM:
-    def __init__(self):
-        self.arity = 2
-        self.sort = 'int'
-        self.sig = [
-            'int', 'int', 'int'
-        ]
-        self.chainable = False
+# class REM:
+#     def __init__(self):
+#         self.arity = 2
+#         self.sort = 'int'
+#         self.sig = [
+#             'int', 'int', 'int'
+#         ]
+#         self.chainable = False
 
-    def __str__(self):
-        return "rem"
+#     def __str__(self):
+#         return "rem"
 
-    __repr__ = __str__
+#     __repr__ = __str__
 
 class LEQ:
     def __init__(self):

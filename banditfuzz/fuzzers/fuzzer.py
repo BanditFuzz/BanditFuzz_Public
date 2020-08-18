@@ -112,7 +112,7 @@ class Fuzzer:
             from .int import constructs as Int_constructs_module
             self.literals['int'] += [IntLiteral]
 
-            self.logic += 'NIRA'
+            self.logic += 'NIA'
             int_constructs = [o[1] for o in inspect.getmembers(Int_constructs_module) if inspect.isclass(o[1])]
             self.actions += int_constructs
             for const in int_constructs:
@@ -122,8 +122,9 @@ class Fuzzer:
             from .real.literal import RealLiteral
             from .real import constructs as Real_constructs_module
             self.literals['real'] += [RealLiteral]
+            if self.logic.find('NIA') != -1: self.logic = self.logic.replace('NIA', 'NIRA')
+            else: self.logic += 'NRA'
 
-            self.logic += 'NRA'
             real_constructs = [o[1] for o in inspect.getmembers(Real_constructs_module) if inspect.isclass(o[1])]
             self.actions += real_constructs
             for const in real_constructs:
@@ -186,7 +187,9 @@ class Fuzzer:
                 benchmark.add_var(IntVariable(f'int_{_}'))
 
         if settings.real:
-            raise NotImplementedError
+            from .real.variable import RealVariable
+            for _ in range(settings.vars):
+                benchmark.add_var(RealVariable(f'real_{_}'))
 
         for _ in range(settings.nassert):
             benchmark.check(self.mk_ast(depth=0,benchmark=benchmark))
