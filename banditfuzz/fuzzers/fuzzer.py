@@ -222,7 +222,7 @@ class Fuzzer:
                     return False,cur_indx
                 else: cur_indx += 1
             for it,child in enumerate(node.children):
-                ret,cur_indx = get_node(child,sort,indx,depth=depth+1,cur_indx=cur_indx)
+                ret,cur_indx = get_node(child.sort,indx,depth=depth+1,cur_indx=cur_indx)
                 if ret != None: 
                     if ret == False:
                         node[it] = new_node
@@ -234,24 +234,25 @@ class Fuzzer:
         for assertion in return_benchmark.assertions:
             node, cur_indx = get_node(assertion,indx,depth=0,cur_indx=0)
             if node != None: break
-        assert node != None
-        sorted_children = {}
-        children_its    = {}
-        for child in node.children:
-            if child.sort not in sorted_children: 
-                sorted_children[child.sort] = []
-                children_its[child.sort]    = 0
-            sorted_children[child.sort].append(child)
-        new_node = Node(val=construct())
-        for i in range(new_node.val.arity):
-            child_sort = new_node.val.sig[i]
-            if child_sort in sorted_children:
-                if children_its[child_sort] < len(sorted_children[child_sort]):
-                    new_node.children.append(sorted_children[child_sort][children_its[child_sort]])
-                    children_its[child_sort] += 1
-                else:
-                    new_node.children.append(self.mk_ast(depth+1,return_benchmark,child_sort))
-            else:  new_node.children.append(self.mk_ast(depth+1,return_benchmark,child_sort))
+            assert node != None
+            sorted_children = {}
+            children_its    = {}
+            for child in node.children:
+                if child.sort not in sorted_children:
+                    sorted_children[child.sort] = []
+                    children_its[child.sort]    = 0
+                sorted_children[child.sort].append(child)
+            new_node = Node(val=construct())
+            for i in range(new_node.val.arity):
+                depth=0 #HR_TS defined
+                child_sort = new_node.val.sig[i]
+                if child_sort in sorted_children:
+                    if children_its[child_sort] < len(sorted_children[child_sort]):
+                        new_node.children.append(sorted_children[child_sort][children_its[child_sort]])
+                        children_its[child_sort] += 1
+                    else:
+                        new_node.children.append(self.mk_ast(depth+1,return_benchmark,child_sort))
+                else:  new_node.children.append(self.mk_ast(depth+1,return_benchmark,child_sort))
         
         for it,assertion in enumerate(return_benchmark.assertions):
             result,_ = set_node(assertion,construct_sort,indx)

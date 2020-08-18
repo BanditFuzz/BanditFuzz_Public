@@ -30,6 +30,12 @@ class Benchmark:                ##return type of fuzzer.gen, fuzzer.mutate
         assert isinstance(node,Node)
         self.assertions.append(node)
 
+    def get_params(self):
+        node_params = []
+        for assertion in self.assertions:
+            node_params.append(len(assertion.children))
+        return [len(self.assertions), len(self._vars), node_params]
+
 
     def __str__(self):
         ret = ''

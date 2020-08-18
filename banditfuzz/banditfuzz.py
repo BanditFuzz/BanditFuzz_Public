@@ -5,6 +5,7 @@ from .parser import args as settings
 from .agents import ThompsonSampling
 from .solvers import run_solver
 from .util import coverage_json_parser
+import statistics
 
 class BanditFuzz:
 	def __init__(self):
@@ -49,16 +50,45 @@ class BanditFuzz:
 		best_coverage = coverage
 		best_benchmark = [self.best_benchmark for i in range(len(best_coverage))]
 
-		for i in range(1, self.max_iter):
-			#if i < 10:
-			new_benchmark = self.fuzzer.gen()#self.fuzzer.mutate(benchmark=self.best_benchmark, construct=self.actions[self.agent.select_action()])
-			self.run_solvers(new_benchmark)
-			newCoverage = jsonParser.getBaseLineCoverage()
-			self.runs.append([new_benchmark, newCoverage])
-			for i in range(len(best_coverage)):
-				if newCoverage[i][1] > best_coverage[i][1]:
-					best_coverage[i] = newCoverage[i]
-					best_benchmark[i] = new_benchmark
+		for i in range(0, self.max_iter):
+			if settings.gen:
+				if i < 10:
+					new_benchmark = self.fuzzer.gen()#self.fuzzer.mutate(benchmark=self.best_benchmark, construct=self.actions[self.agent.select_action()])
+					self.run_solvers(new_benchmark)
+					newCoverage = jsonParser.getBaseLineCoverage()
+					self.runs.append([new_benchmark, newCoverage])
+					for i in range(len(best_coverage)):
+						if newCoverage[i][1] > best_coverage[i][1]:
+							best_coverage[i] = newCoverage[i]
+							best_benchmark[i] = new_benchmark
+
+				else:
+
+					running_average_old = statistics.mean([self.runs[i-2][1][0][1], self.runs[i-3][1][0][1], self.runs[i-4][1][0][1], self.runs[i-5][1][0][1],
+														  self.runs[i-6][1][0][1], self.runs[i-7][1][0][1], self.runs[i-8][1][0][1], self.runs[i-9][1][0][1],
+														  self.runs[i-10][1][0][1]])
+					new = self.runs[i-1][1][0][1]
+					if new >= running_average_old:
+						new_benchmark = self.fuzzer.mutate(benchmark=self.best_benchmark, construct=self.actions[self.agent.select_action()])
+					else:
+						new_benchmark = self.fuzzer.gen()
+					newCoverage = jsonParser.getBaseLineCoverage()
+					self.runs.append([new_benchmark, newCoverage])
+					pdb.set_trace()
+					for i in range(len(best_coverage)):
+						if newCoverage[i][1] > best_coverage[i][1]:
+							best_coverage[i] = newCoverage[i]
+							best_benchmark[i] = new_benchmark
+			else:
+				new_benchmark=self.fuzzer.gen()
+				self.run_solvers(new_benchmark)
+				newCoverage = jsonParser.getBaseLineCoverage()
+				self.runs.append([new_benchmark, newCoverage])
+				for i in range(len(best_coverage)):
+					if newCoverage[i][1] > best_coverage[i][1]:
+						best_coverage[i] = newCoverage[i]
+						best_benchmark[i] = new_benchmark
+
 
 		'''dir_cov = settings.db + "/cov"
 		for i in range(len(self.runs)):

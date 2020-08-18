@@ -216,6 +216,11 @@ parser.add_argument('-cov',
                     dest="cov",
                     help="Run Banditfuzz with coverage. Requires target to be compiled with coverage flags")
 
+parser.add_argument('-gen',
+                    action='store_true',
+                    dest='gen',
+                    help='Run coverage with barebones genetic algorithm - not setup yet')
+
 # parser.add_argument('-randbit', '--random-bit-lengths', 
 #                     action='store_true',
 #                     dest="rand_bit_len",
