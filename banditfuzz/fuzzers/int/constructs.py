@@ -73,7 +73,7 @@ class DIV:
         self.chainable = False
 
     def __str__(self):
-        return "/"
+        return "div"
 
     __repr__ = __str__
 
