@@ -42,13 +42,20 @@ def parser():
             if word == 'and' or word == 'or' or word == 'not' or word == 'xor' or word == '=>' :
                 bool_construct_count +=1
 
+            if word == 'bvule' or word == 'bvuge' or word == 'bvsle' or word == 'bvsge':
+                predicate_eq_count +=1
+
+            if word == 'bvult' or word == 'bvugt' or word == 'bvslt' or word == 'bvsgt':
+                predicate_ineq_count +=1
+
     bv_variable_count -=5
     bool_variable_count -=5
     variable_count = bv_variable_count + bool_variable_count
     construct_count = bv_construct_count + bool_construct_count 
     ratio_non_linear_const = float(non_linear_count/construct_count)
-
-    info = [construct_count, variable_count, non_linear_count,ratio_non_linear_const]
+    ratio_ineq_eq_const = float(predicate_eq_count/predicate_ineq_count)
+    ratio_ineq_total = float((predicate_eq_count+predicate_ineq_count)/construct_count)
+    info = [construct_count, variable_count, non_linear_count,ratio_non_linear_const,predicate_eq_count,predicate_ineq_count, ratio_ineq_eq_const, ratio_ineq_total]
     #print(non_linear_count)
     #print(variable_count)
 
@@ -230,6 +237,7 @@ def main():
         full_info.append(tmp)
         print("Z3 time: ", z3_time)
         print("cvc4 time ", cvc4_time)
+        print("BitWuzla time ", bit_time)
         print(full_info)
 
         print("Completed count: ", i+1)
@@ -249,7 +257,7 @@ def main():
 
         key = item[0]
         value = item[1]
-        tmp_list = [key, full_info[key][0], full_info[key][1], full_info[key][2], full_info[key][3],full_info[key][4], full_info[key][5],full_info[key][6], full_info[key][7], value, z3_time[key], bit_time[key]]
+        tmp_list = [key, full_info[key][0], full_info[key][1], full_info[key][2], full_info[key][3],full_info[key][4], full_info[key][5],full_info[key][6], full_info[key][7], full_info[key][8], full_info[key][9],full_info[key][10], full_info[key][11], full_info[key][12], full_info[key][13], value, z3_time[key], bit_time[key]]
         info.append(tmp_list)
 
     #print(info)
@@ -269,7 +277,7 @@ def main():
 
         key = item1[0]
         value = item1[1]
-        tmp_list1 = [key, full_info[key][0], full_info[key][1], full_info[key][2], full_info[key][3],full_info[key][4], full_info[key][5],full_info[key][6], full_info[key][7],  cvc4_time[key], value, bit_time[key]]
+        tmp_list1 = [key, full_info[key][0], full_info[key][1], full_info[key][2], full_info[key][3],full_info[key][4], full_info[key][5],full_info[key][6], full_info[key][7], full_info[key][8], full_info[key][9], full_info[key][10], full_info[key][11], full_info[key][12], full_info[key][13], cvc4_time[key], value, bit_time[key]]
         info1.append(tmp_list1)
 
     #print(info)
