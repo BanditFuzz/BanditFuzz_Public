@@ -1,4 +1,4 @@
-import argparse,multiprocessing
+import argparse,multiprocessing,pdb,sys
 
 parser = argparse.ArgumentParser()
 
@@ -18,6 +18,15 @@ parser.add_argument("-ban", "--banned-constructs",
                 default=[],
                 nargs='+',
                 help="The target SMT Solvers in the banditfuzz loop."
+)
+
+parser.add_argument("-w", "--weights",
+                metavar="weights[,weights...]",
+                action="store",
+                dest="weights",
+                default=[],
+                nargs='+',
+                help="Sequence of generator weights (e.g, -w = 2 fp.abs 1.5) to increase odds '=' by 100% and fp.abs by 50%"
 )
 
 parser.add_argument("-r", "--reference-solvers",
@@ -210,16 +219,18 @@ parser.add_argument('-256', '--256',
                     dest="_256",
                     help="Generate benchmarks with width 256"
 )
-
-# parser.add_argument('-randbit', '--random-bit-lengths', 
-#                     action='store_true',
-#                     dest="rand_bit_len",
-#                     help="Generate benchmarks with random bit widths"
-# )
-
-
-
-
-
 args = parser.parse_args()
+
+#set default width
 if not(args._8 or args._16 or args._32 or args._64 or args._128 or args._256): args._32 = True
+
+#check weights
+assert len(args.weights) % 2 == 0
+weights = {}
+try:
+    for _ in range(0,len(args.weights),2):
+        weights[args.weights[_]] = float(args.weights[_+1])
+except Exception as e:
+    print("Invalid weights.", e)
+    sys.exit(1)
+args.weights = weights

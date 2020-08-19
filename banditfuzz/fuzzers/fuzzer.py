@@ -36,7 +36,10 @@ class Fuzzer:
             'uf'    : [],
             'round' : [],
         }
+        self.construct_weights = {}
+
         self._mk_from_settings()
+
     def _mk_from_settings(self):
         from .core import constructs as core_constructs
         from .core.literal import BoolLiteral
@@ -137,10 +140,19 @@ class Fuzzer:
                 for it,op in enumerate(self.constructs[sort]):
                     if str(op()) == ban_op:
                         found = True
-                        break
-                if found: break
             if not found: die("Could not find input operator: ", ban_op)
             del self.constructs[sort][it]
+
+        for w_op in settings.weights:
+            found = False
+            for sort in self.constructs:
+                self.construct_weights[sort] = []
+                for it,op in enumerate(self.constructs[sort]):
+                    self.construct_weights[sort].append(1.0)
+                    if str(op()) == w_op:
+                        found = True
+                        self.construct_weights[sort][-1] = settings.weights[w_op]
+            if not found: die(f"Could not find operator: {w_op}")
 
     def gen(self):
         benchmark = Benchmark(logic=self.logic)
@@ -200,15 +212,21 @@ class Fuzzer:
         if depth == settings.depth:
             if sort == 'round' or sort == 'reg':
                 return Node(random.choice(self.literals[sort])())
-            opts =  [random.choice(benchmark.vars(sort=sort)),    random.choice(self.literals[sort])()]
-            odds =  [1,                                           1]
+            opts =  np.array([random.choice(benchmark.vars(sort=sort)),    random.choice(self.literals[sort])()])
+            odds =  np.array([1,                                           1])
             return Node(
                 np.random.choice(
-                    p= odds/np.linalg.norm(odds)**2,
+                    p= odds/sum(odds),
                     a= opts,
                 )
             )
-        ret = Node(random.choice(self.constructs[sort])())
+        opts = self.constructs[sort]
+        odds = np.array(self.construct_weights[sort])
+        ret = Node(np.random.choice (
+                p= odds/sum(odds),
+                a= opts,
+              )()
+            )
         for _ in range(ret.val.arity):
             ret.children.append(self.mk_ast(depth=depth+1, benchmark=benchmark, sort=ret.val.sig[_]))
         return ret
@@ -273,7 +291,7 @@ class Fuzzer:
             else:  new_node.children.append(self.mk_ast(depth+1,return_benchmark,child_sort))
         
         for it,assertion in enumerate(return_benchmark.assertions):
-            result,_ = set_node(assertion,construct_sort,indx)
+            result, _ = set_node(assertion,construct_sort,indx)
             if   result == True:    break
             elif result == False:   return_benchmark.assertions[it] = new_node
             else:                   continue
