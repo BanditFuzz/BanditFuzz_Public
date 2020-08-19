@@ -219,6 +219,17 @@ parser.add_argument('-256', '--256',
                     dest="_256",
                     help="Generate benchmarks with width 256"
 )
+
+parser.add_argument("-x", "-bx",
+            metavar="bx",
+            action="store",
+            dest="bx",
+            default='b',
+            type=str,
+            help="binary or hex"
+)
+
+
 args = parser.parse_args()
 
 #set default width

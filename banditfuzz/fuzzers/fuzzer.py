@@ -184,14 +184,20 @@ class Fuzzer:
                 elif settings._256: benchmark.add_var(FPVariable(f'fp_{_}',19,237))                
 
         if settings.bv:
-            from .bv.variable import BV_Variable
+            from .bv.variable import BV_Variable as BVVariable
             for _ in range(settings.vars):
-                if   settings._8:   benchmark.add_var(BV_Variable(f'bv_{_}', size=8))
-                elif settings._16:  benchmark.add_var(BV_Variable(f'bv_{_}', size=16))
-                elif settings._32:  benchmark.add_var(BV_Variable(f'bv_{_}', size=32))
-                elif settings._64:  benchmark.add_var(BV_Variable(f'bv_{_}', size=64))
-                elif settings._128: benchmark.add_var(BV_Variable(f'bv_{_}', size=128))
-                elif settings._256: benchmark.add_var(BV_Variable(f'bv_{_}', size=256))
+                if settings._8:
+                    benchmark.add_var(BVVariable(f'bv_{_}', 8))
+                elif settings._16:
+                    benchmark.add_var(BVVariable(f'bv_{_}', 16))
+                elif settings._32:
+                    benchmark.add_var(BVVariable(f'bv_{_}', 32))
+                elif settings._64:
+                    benchmark.add_var(BVVariable(f'bv_{_}', 64))
+                elif settings._128:
+                    benchmark.add_var(BVVariable(f'bv_{_}', 128))
+                elif settings._256:
+                    benchmark.add_var(BVVariable(f'bv_{_}', 256))
 
         if settings.integer or settings.strings:
             from .int.variable import IntVariable
