@@ -1,2 +1,2 @@
-Command terminated by signal 9
-1680.84
+Command terminated by signal 2
+0.02

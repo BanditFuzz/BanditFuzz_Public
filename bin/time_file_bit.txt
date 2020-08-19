@@ -1,2 +1,2 @@
-Command exited with non-zero status 20
-0.00
+Command terminated by signal 2
+0.14

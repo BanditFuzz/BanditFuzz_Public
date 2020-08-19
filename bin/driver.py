@@ -16,7 +16,10 @@ def parser():
     bool_variable_count = 0
     variable_count = 0
     bv_construct_count = 0
-    bool_construct_count = 0 
+    bool_construct_count = 0
+    predicate_eq_count = 0
+    predicate_ineq_count = 0
+    
     info =[]
 
     for item in lines:
@@ -116,9 +119,9 @@ def main():
     bit_time = {}
     x = []
 
-    for i in range (2):
+    for i in range (50):
         x.append(i)
-        cmd = 'smtfuzz -bv --weight bvudiv 10 bvurem 10 bvsrem 10 bvsdiv 10 --64 > out_file.txt'
+        cmd = 'smtfuzz -bv --weight bvudiv 10 bvurem 10 bvsrem 10 bvsdiv 10 --64  -d 5 > out_file.txt'
         cmd_cp= 'cp out_file.txt inputs/' + str(i) + '.txt'
         cmd_cp_bug= 'cp out_file.txt bugs/' + str(i) + '.txt'
         
