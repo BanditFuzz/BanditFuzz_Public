@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 from ..parser import parser
 from ..parser import args as settings
 
@@ -35,4 +36,10 @@ def die(*args,help=False,**kwargs):
     print()
         
     sys.exit(1)
+
+def normalize(v):
+    norm = np.linalg.norm(v)
+    if norm == 0: 
+        return v
+    return v / norm
 

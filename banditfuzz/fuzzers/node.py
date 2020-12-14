@@ -11,4 +11,20 @@ class Node:          ##AST node class,
             ret += str(child) + ' '
         return ret[:-1] + ')'
 
+    def __eq__(self, other): #added to allow to check if two nodes are the same operator
+        if other.sort == self.sort and other.val == self.val and other.children == self.children:
+            return True
+        return False
+
+    def isLeaf(self):
+        if not self.children:
+            return True
+        return False
+
+    def isTarget(self, target):
+        if target.val == self.val and target.sort == self.sort and target.children == self.children:
+            return True
+        else:
+            return False
+
     __repr__ = __str__

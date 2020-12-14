@@ -134,7 +134,7 @@ parser.add_argument('-uf', '--uninterpreted-functions',
                     help="Generate benchmarks with uninterpreted functions"
 )
 
-parser.add_argument('-s', '--strings', 
+parser.add_argument('-str', '--strings', 
                     action='store_true',
                     dest="strings",
                     help="Generate benchmarks with strings functions"
@@ -219,6 +219,40 @@ parser.add_argument('-256', '--256',
                     dest="_256",
                     help="Generate benchmarks with width 256"
 )
+
+parser.add_argument('-cov',
+                    action='store_true',
+                    dest="cov",
+                    help="Run Banditfuzz with coverage. Requires target to be compiled with coverage flags")
+
+parser.add_argument('-gen',
+                    action='store_true',
+                    dest='gen',
+                    help='Run coverage with barebones genetic algorithm - not setup yet')
+
+parser.add_argument('-tmut',
+                    action='store_true',
+                    dest='tmut',
+                    help='Just put in here to allow test of mutate')
+
+# parser.add_argument('-randbit', '--random-bit-lengths', 
+#                     action='store_true',
+#                     dest="rand_bit_len",
+#                     help="Generate benchmarks with random bit widths"
+# )
+
+
+
+parser.add_argument("-x", "-bx",
+            metavar="bx",
+            action="store",
+            dest="bx",
+            default='b',
+            type=str,
+            help="binary or hex"
+)
+
+
 args = parser.parse_args()
 
 #set default width

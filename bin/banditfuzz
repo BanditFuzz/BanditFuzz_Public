@@ -2,13 +2,19 @@
 from banditfuzz import BanditFuzz,warning,die,help_msg
 from banditfuzz.parser import args as settings
 import pdb,sys,traceback
+from banditfuzz.fuzzers.bv import constructs
 
 def main():
     fuzzer = BanditFuzz()
-    fuzzer.fuzz()
+    if settings.cov:
+        fuzzer.fuzz_coverage()
+    else:
+        fuzzer.fuzz()
+    #fuzzer.fuzz_test()
 
 if __name__ == "__main__":
     try:
+        #pdb.set_trace()
         main()
         if settings.debug: print("Completed evaluation without error.")
     except:

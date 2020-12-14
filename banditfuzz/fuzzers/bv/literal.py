@@ -25,7 +25,7 @@ class BVLiteral:
         binaryVal = ''
         for _ in range(size): binaryVal += rng()
 
-        self.val += hex(int(binaryVal,2))[2:].zfill(8)
+        self.val += hex(int(binaryVal,2))[2:].zfill(int(size/4))
         self.val += ' '
 
     def __str__(self):

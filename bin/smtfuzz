@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
 from banditfuzz import BanditFuzz,warning,die,help_msg
 from banditfuzz.parser import args as settings
+from banditfuzz.fuzzers import bv
 import pdb,sys,traceback
 
 def main():
     bfuzz = BanditFuzz()
-    print(bfuzz.fuzzer.gen())
+    if not settings.tmut:
+        print(bfuzz.fuzzer.gen())
+    else:
+        benchmark = bfuzz.fuzzer.gen()
+        print(benchmark)
+        new_construct = bv.constructs.BVAND()
+        new_benchmark = bfuzz.fuzzer.mutate(benchmark, new_construct)
+        print(new_benchmark)
+        target_assertion = ''
+
     # fuzzer.loop()
 
 if __name__ == "__main__":
